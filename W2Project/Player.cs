@@ -45,6 +45,26 @@ namespace W2Project
             lis_items = new List<Item>();
             lis_equips = new List<bool>();
         }
+        public Player(int lvl, string name, string job, int atk, int batk, int def, int bdef, int HP, int bHP, int gold, int exp, int mexp, List<Item> items, List<bool> equips)
+        {
+            if (instance == null)
+                instance = this;
+            fLvl = lvl;
+            fName = name;
+            fJob = job;
+            fAtk = atk;
+            fBonusAtk = batk;
+            fDef = def;
+            fBonusDef = bdef;
+            fHP = HP;
+            fBonusHP = bHP;
+            fGold = gold;
+            fExp = exp;
+            fMaxExp = mexp;
+            lis_items = items;
+            lis_equips = equips;
+        }
+
         public void AddExp(int exp) // Level up logic was also included
         {
             fExp += exp;

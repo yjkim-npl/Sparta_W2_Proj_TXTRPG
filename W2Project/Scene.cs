@@ -11,7 +11,6 @@ namespace W2Project
     {
         public Scene()
         {
-            MoveScene(SceneType.Start);
         }
         public void MoveScene(SceneType type, int opt = 0)
         {
@@ -38,6 +37,8 @@ namespace W2Project
                     Console.WriteLine("2. 인벤토리");
                     Console.SetCursorPosition(7, 9);
                     Console.WriteLine("3. 상점");
+                    Console.SetCursorPosition(7, 11);
+                    Console.WriteLine("0. 게임 종료");
                     Console.SetCursorPosition(5, 22);
                     Console.WriteLine("원하시는 행동을 입력해주세요");
                     Console.SetCursorPosition(5, 23);
@@ -127,6 +128,12 @@ namespace W2Project
                             Console.WriteLine("|");
                             Console.SetCursorPosition(45, 8 + a);
                         }
+                        if(item.GetBDef() == 0 && item.GetBAtk() == 0)
+                        {
+                            Console.SetCursorPosition(29, 8 + a);
+                            Console.WriteLine("|");
+                            Console.SetCursorPosition(45, 8 + a);
+                        }
                         Console.WriteLine(item.GetExplanation());
 
                     }
@@ -166,7 +173,7 @@ namespace W2Project
                                 Console.SetCursorPosition(5, 19);
                                 Console.WriteLine("장착 / 장착 해제 하고싶은 아이템의 번호를 입력하세요");
                                 Console.SetCursorPosition(7, 7 + itemNo);
-                                Console.WriteLine("{0}. [E] ", itemNo);
+                                Console.WriteLine("{0}  [E] ", itemNo);
                             }
                             Console.SetCursorPosition(5, 20);
                             Console.WriteLine("0. 나가기");
@@ -304,7 +311,17 @@ namespace W2Project
                     break;
                 case SceneType.Dungeon:
                     break;
-                case SceneType.Test:
+                case SceneType.End:
+                    Console.SetCursorPosition(0,10);
+                    Console.WriteLine("{0}",Program.CenterAlign("저장하시겠습니까?",Console.WindowWidth));
+                    Console.SetCursorPosition(7,15);
+                    Console.WriteLine("1. 저장 후 종료");
+                    Console.SetCursorPosition(7,16);
+                    Console.WriteLine("2. 그냥 종료");
+                    Console.SetCursorPosition(5, 22);
+                    Console.WriteLine("원하시는 행동을 입력해주세요 ");
+                    Console.SetCursorPosition(5, 23);
+                    Console.Write(">>  ");
                     break;
                 default:
                     break;
@@ -327,6 +344,6 @@ namespace W2Project
         Inventory,
         Shop,
         Dungeon,
-        Test
+        End
     }
 }

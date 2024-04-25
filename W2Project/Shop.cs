@@ -14,19 +14,12 @@ namespace W2Project
         List<Item> lis_Items;
         List<int> lis_stock;
         public static Shop instance;
-        public Shop(string item_list) 
+        public Shop()
         {
-            if (instance == null)
-                instance = this;
             lis_Items = new List<Item>();
             lis_stock = new List<int>();
-            StreamReader sr = new StreamReader(item_list,Encoding.Default);
-            string line = sr.ReadLine(); // dummy line
-            while(line != null)
-            {
-                line = sr.ReadLine();
-                Console.WriteLine(line);
-            }
+            lis_Items.Add(new Item("낡은 옷",      0, 0, 0, 0,  100, "낡은 옷"));
+            lis_stock.Add(1);
             lis_Items.Add(new Item("수련자 갑옷",  1, 1, 0, 5, 1000, "수련에 도움을 주는 갑옷입니다."));
             lis_stock.Add(1);
             lis_Items.Add(new Item("무쇠 갑옷",    2, 2, 0, 4, 2000, "무쇠로 만들어져 튼튼한 갑옷입니다."));
@@ -39,6 +32,22 @@ namespace W2Project
             lis_stock.Add(1);
             lis_Items.Add(new Item("스파르타 창",  6, 3, 2, 0, 2500, "르탄이가 사용했던 전설의 창입니다."));
             lis_stock.Add(1);
+            if (instance == null)
+                instance = this;
+        }
+        public Shop(List<Item> item_list) 
+        {
+            if (instance == null)
+                instance = this;
+            lis_Items = item_list;
+            lis_stock = new List<int>();
+            for(int a=0; a<lis_Items.Count; a++)
+            {
+                int id = lis_Items[a].GetID();
+                if (id == 0)
+                    continue;
+                lis_stock[id] = 1;
+            }
         }
         public int GetNItem()
         {
@@ -56,43 +65,5 @@ namespace W2Project
         {
             return lis_stock[idx];
         }
-    }
-    public class Item
-    {
-        string fName;
-        int fID;
-        int fHierachy;
-        int fBAtk;
-        int fBDef;
-        int fBHP;
-        int fPrice;
-        string fExplain;
-        public Item()
-        {
-            fName = "";
-            fID = 0;
-            fHierachy = 0;
-            fBAtk = 0;
-            fBDef = 0;
-            fBHP = 0;
-            fPrice = 0;
-            fExplain = "";
-        }
-        public Item(string name, int id, int hier, int bAtk, int bDef,  int price, string expalin)
-        {
-            fName = name;
-            fID = id;
-            fHierachy = hier;
-            fBAtk = bAtk;
-            fBDef = bDef;
-            fPrice = price;
-            fExplain = expalin;
-        }
-        public string GetName() {  return fName; }
-        public string GetExplanation() { return fExplain; }
-        public int GetBAtk() { return fBAtk;}
-        public int GetBDef() { return fBDef;}
-        public int GetBHP() { return fBHP; }
-        public int GetPrice() { return fPrice;}
     }
 }
