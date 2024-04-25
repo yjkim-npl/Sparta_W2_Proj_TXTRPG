@@ -398,5 +398,3 @@ FodyWeavers.xsd
 *.sln.iml
 
 # User custom
-Assets/*.txt
-Assets/*/*.dat
