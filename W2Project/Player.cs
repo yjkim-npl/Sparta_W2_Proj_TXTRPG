@@ -75,7 +75,7 @@ namespace W2Project
                 fMaxExp += fMaxExp;
                 fAtk += 5;
                 fDef += 2;
-                fHP += 100 + 50 * (fLvl -1);
+                fHP = 100 + 50 * (fLvl -1);
             }
         }
 
@@ -92,6 +92,7 @@ namespace W2Project
                 fLvl--;
                 fGold = fGold / 2;
                 fExp = fExp / 2;
+                fHP = 100 + 50 * (fLvl - 1) + fBonusHP;
             }
         }
 
