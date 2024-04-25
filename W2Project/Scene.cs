@@ -76,7 +76,9 @@ namespace W2Project
                     }
                     Console.SetCursorPosition(7, 11);
                     Console.WriteLine("Gold: {0}", Player.instance.GetStatus(Player.Status.GOLD) + " G");
-                    Console.SetCursorPosition(7, 13);
+                    Console.SetCursorPosition(7, 12);
+                    Console.WriteLine("ExpL {0} / {1}", Player.instance.GetStatus(Player.Status.EXP), Player.instance.GetStatus(Player.Status.MEXP));
+                    Console.SetCursorPosition(7, 16);
                     Console.WriteLine("0. 나가기");
                     Console.SetCursorPosition(5, 22);
                     Console.WriteLine("원하시는 행동을 입력해주세요");

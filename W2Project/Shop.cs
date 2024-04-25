@@ -14,12 +14,19 @@ namespace W2Project
         List<Item> lis_Items;
         List<int> lis_stock;
         public static Shop instance;
-        public Shop() 
+        public Shop(string item_list) 
         {
             if (instance == null)
                 instance = this;
             lis_Items = new List<Item>();
             lis_stock = new List<int>();
+            StreamReader sr = new StreamReader(item_list,Encoding.Default);
+            string line = sr.ReadLine(); // dummy line
+            while(line != null)
+            {
+                line = sr.ReadLine();
+                Console.WriteLine(line);
+            }
             lis_Items.Add(new Item("수련자 갑옷",  1, 1, 0, 5, 1000, "수련에 도움을 주는 갑옷입니다."));
             lis_stock.Add(1);
             lis_Items.Add(new Item("무쇠 갑옷",    2, 2, 0, 4, 2000, "무쇠로 만들어져 튼튼한 갑옷입니다."));

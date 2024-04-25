@@ -26,70 +26,69 @@ namespace W2Project
         }
         static void Main(string[] args)
         {
-            bool isPlaying = true;
+            bool isPlaying = false;
             Console.SetWindowSize(90, 30);
             Scene scene;
-            if(isPlaying)
+            // Test Scene
+
+            // Start Scene
+            scene = new Scene();
+            string username = Console.ReadLine();
+            Player player = new Player(username);
+            // Current location is W2Project/W2Project/bin/Debug/net6.0/ 
+            string item_list = "../../../../Assets/ItemList.csv";
+            Shop shop = new Shop(item_list);
+
+            // MainScene
+//            scene.MoveScene(SceneType.Main);
+            int choice = Choice(1, 3);
+            int equip_opt = 0;
+            int shop_opt = 0;
+            while (isPlaying)
             {
-                // Test Scene
-
-                // Start Scene
-                scene = new Scene();
-                string username = Console.ReadLine();
-                Player player = new Player(username);
-                Shop shop = new Shop();
-
-                // MainScene
-                scene.MoveScene(SceneType.Main);
-                int choice = Choice(1, 3);
-                int equip_opt = 0;
-                int shop_opt = 0;
-                while (isPlaying)
+                switch (choice)
                 {
-                    switch (choice)
-                    {
-                        case 0:
-                            scene.MoveScene(SceneType.Main);
-                            choice = Choice(1, 3);
-                            break;
-                        case 1:
-                            scene.MoveScene(SceneType.Status);
-                            choice = Choice(0, 0);
-                            break;
-                        case 2:
+                    case 0:
+                        scene.MoveScene(SceneType.Main);
+                        choice = Choice(1, 3);
+                        break;
+                    case 1:
+                        scene.MoveScene(SceneType.Status);
+                        choice = Choice(0, 0);
+                        break;
+                    case 2:
 
-                            if(equip_opt == 1)
-                            {
-                                scene.MoveScene(SceneType.Inventory, equip_opt);
-                                equip_opt = Choice(0,1);
-                                if (equip_opt == 0)
-                                    choice = equip_opt;
-                            }
-                            else
-                            {
-                                scene.MoveScene(SceneType.Inventory);
-                                equip_opt = Choice(0,1);
-                            }
-                            break;
-                        case 3:
-                            if (shop_opt == 1)
-                            {
-                                scene.MoveScene(SceneType.Shop, shop_opt);
-                                shop_opt = Choice(0, 1);
-                                if (shop_opt == 0)
-                                    choice = 0;
-                            }
-                            else
-                            {
-                                scene.MoveScene(SceneType.Shop);
-                                shop_opt = Choice(0, 1);
-                            }
-                            break;
-                        default:
-                            scene.MoveScene(SceneType.Main);
-                            choice = Choice(0, 4);
-                            break;
-                    }
+                        if(equip_opt == 1)
+                        {
+                            scene.MoveScene(SceneType.Inventory, equip_opt);
+                            equip_opt = Choice(0,1);
+                            if (equip_opt == 0)
+                                choice = equip_opt;
+                        }
+                        else
+                        {
+                            scene.MoveScene(SceneType.Inventory);
+                            equip_opt = Choice(0,1);
+                        }
+                        break;
+                    case 3:
+                        if (shop_opt == 1)
+                        {
+                            scene.MoveScene(SceneType.Shop, shop_opt);
+                            shop_opt = Choice(0, 1);
+                            if (shop_opt == 0)
+                                choice = 0;
+                        }
+                        else
+                        {
+                            scene.MoveScene(SceneType.Shop);
+                            shop_opt = Choice(0, 1);
+                        }
+                        break;
+                    default:
+                        scene.MoveScene(SceneType.Main);
+                        choice = Choice(0, 4);
+                        break;
                 }
             }
         }
