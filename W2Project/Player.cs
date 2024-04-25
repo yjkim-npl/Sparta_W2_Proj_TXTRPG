@@ -75,8 +75,35 @@ namespace W2Project
                 fMaxExp += fMaxExp;
                 fAtk += 5;
                 fDef += 2;
-                fHP += 50;
+                fHP += 100 + 50 * (fLvl -1);
             }
+        }
+
+        public void FullHealth()
+        {
+            fHP = 100 + 50 * (fLvl - 1);
+        }
+
+        public void Damage(int damage)
+        {
+            fHP -= damage;
+            if(Dead())
+            {
+                fLvl--;
+                fGold = fGold / 2;
+                fExp = fExp / 2;
+            }
+        }
+
+        public bool Dead()
+        {
+            if (fHP <= 0) return true;
+            else return false;
+        }
+
+        public void AddGold(int gold)
+        {
+            fGold += gold;
         }
 
         public string GetStatus(Status stat)
@@ -132,6 +159,10 @@ namespace W2Project
         public Item GetItem(int idx)
         {
             return lis_items[idx];
+        }
+        public int GetHierachy(int idx)
+        {
+            return lis_items[idx].GetHierachy();
         }
         public bool GetEquipStatus(int idx)
         {

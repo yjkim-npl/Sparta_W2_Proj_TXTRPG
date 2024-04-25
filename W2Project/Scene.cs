@@ -37,7 +37,11 @@ namespace W2Project
                     Console.WriteLine("2. 인벤토리");
                     Console.SetCursorPosition(7, 9);
                     Console.WriteLine("3. 상점");
+                    Console.SetCursorPosition(7, 10);
+                    Console.WriteLine("4. 던전");
                     Console.SetCursorPosition(7, 11);
+                    Console.WriteLine("5. 휴식");
+                    Console.SetCursorPosition(7, 13);
                     Console.WriteLine("0. 게임 종료");
                     Console.SetCursorPosition(5, 22);
                     Console.WriteLine("원하시는 행동을 입력해주세요");
@@ -56,21 +60,21 @@ namespace W2Project
                     Console.WriteLine("{0} , ({1})", Player.instance.GetStatus(Player.Status.NAME), Player.instance.GetStatus(Player.Status.JOB));
                     Console.SetCursorPosition(7, 8);
                     Console.WriteLine("공격력: {0}", Player.instance.GetStatus(Player.Status.ATK));
-                    if (Player.instance.GetStatus(Player.Status.BATK) != null)
+                    if (int.Parse(Player.instance.GetStatus(Player.Status.BATK)) != 0)
                     {
                         Console.SetCursorPosition(18, 8);
                         Console.WriteLine("+ {0}", Player.instance.GetStatus(Player.Status.BATK));
                     }
                     Console.SetCursorPosition(7, 9);
                     Console.WriteLine("방어력: {0}", Player.instance.GetStatus(Player.Status.DEF));
-                    if (Player.instance.GetStatus(Player.Status.BDEF) != null)
+                    if (int.Parse(Player.instance.GetStatus(Player.Status.BDEF)) != 0)
                     {
                         Console.SetCursorPosition(18, 9);
                         Console.WriteLine("+ {0}", Player.instance.GetStatus(Player.Status.BDEF));
                     }
                     Console.SetCursorPosition(7, 10);
                     Console.WriteLine("체 력: {0}", Player.instance.GetStatus(Player.Status.HP));
-                    if (Player.instance.GetStatus(Player.Status.BHP) != null)
+                    if (int.Parse(Player.instance.GetStatus(Player.Status.BHP)) != 0)
                     {
                         Console.SetCursorPosition(18, 10);
                         Console.WriteLine("+ {0}", Player.instance.GetStatus(Player.Status.BHP));
@@ -78,7 +82,7 @@ namespace W2Project
                     Console.SetCursorPosition(7, 11);
                     Console.WriteLine("Gold: {0}", Player.instance.GetStatus(Player.Status.GOLD) + " G");
                     Console.SetCursorPosition(7, 12);
-                    Console.WriteLine("ExpL {0} / {1}", Player.instance.GetStatus(Player.Status.EXP), Player.instance.GetStatus(Player.Status.MEXP));
+                    Console.WriteLine("Exp: {0} / {1}", Player.instance.GetStatus(Player.Status.EXP), Player.instance.GetStatus(Player.Status.MEXP));
                     Console.SetCursorPosition(7, 16);
                     Console.WriteLine("0. 나가기");
                     Console.SetCursorPosition(5, 22);
@@ -310,6 +314,31 @@ namespace W2Project
                     Console.SetCursorPosition(8, 23);
                     break;
                 case SceneType.Dungeon:
+                    Console.SetCursorPosition(5, 3);
+                    Console.WriteLine("[던전]");
+                    Console.SetCursorPosition(5, 4);
+                    Console.WriteLine("몬스터를 처치하여 경험치와 재화를 얻을 수 있습니다.");
+                    Console.SetCursorPosition(5, 5);
+                    Console.WriteLine("전투 시스템 미구현");
+                    Console.SetCursorPosition(7, 7);
+                    Console.WriteLine("+ {0} 경험치", 5*int.Parse(Player.instance.GetStatus(Player.Status.LVL)));
+                    Player.instance.AddExp(5*int.Parse(Player.instance.GetStatus(Player.Status.LVL)));
+                    Console.SetCursorPosition(7, 8);
+                    Console.WriteLine("+ {0} G",2*int.Parse(Player.instance.GetStatus(Player.Status.LVL)));
+                    Player.instance.AddGold(2*int.Parse(Player.instance.GetStatus(Player.Status.LVL)));
+                    Console.SetCursorPosition(7, 9);
+                    int damage = 10 *int.Parse(Player.instance.GetStatus(Player.Status.LVL))
+                        - int.Parse(Player.instance.GetStatus(Player.Status.DEF)) - int.Parse(Player.instance.GetStatus(Player.Status.BDEF)) <= 0 ? 0 :
+                        10 *int.Parse(Player.instance.GetStatus(Player.Status.LVL))- int.Parse(Player.instance.GetStatus(Player.Status.DEF)) - int.Parse(Player.instance.GetStatus(Player.Status.BDEF));
+                    Console.WriteLine("- {0} HP", damage);
+                    Player.instance.Damage(damage);
+                    Console.SetCursorPosition(5, 19);
+                    Console.WriteLine("0. 나가기");
+                    Console.SetCursorPosition(5, 23);
+                    Console.Write(">>  ");
+                    Console.SetCursorPosition(8, 23);
+
+                    
                     break;
                 case SceneType.End:
                     Console.SetCursorPosition(0,10);

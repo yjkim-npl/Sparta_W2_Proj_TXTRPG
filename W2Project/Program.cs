@@ -136,7 +136,7 @@ namespace W2Project
                 {
                     case 0:
                         scene.MoveScene(SceneType.Main);
-                        choice = Choice(0, 3);
+                        choice = Choice(0, 5);
                         if (choice == 0)
                         {
                             scene.MoveScene(SceneType.End);
@@ -148,8 +148,13 @@ namespace W2Project
                                 wantSave = false;
                             else
                                 wantSave = false;
-
                         }
+                        while (choice ==4 &&int.Parse(Player.instance.GetStatus(Player.Status.HP)) <= 10)
+                        {
+                            Console.WriteLine("휴식이 필요합니다.");
+                            choice = Choice(0, 5);
+                        }
+
                         break;
                     case 1:
                         scene.MoveScene(SceneType.Status);
@@ -187,6 +192,23 @@ namespace W2Project
                             if (shop_opt == 0)
                                 choice = 0;
                         }
+                        break;
+                    case 4:
+                        scene.MoveScene(SceneType.Dungeon);
+                        choice = Choice(0, 0);
+                        break;
+                    case 5:
+                        if (
+                            (int.Parse(Player.instance.GetStatus(Player.Status.HP))) +
+                            (int.Parse(Player.instance.GetStatus(Player.Status.BHP))) <
+                            100 + 
+                            50*(int.Parse(Player.instance.GetStatus(Player.Status.LVL)) -1) +
+                            int.Parse(Player.instance.GetStatus(Player.Status.BHP))
+                            )
+                        {
+                            Player.instance.FullHealth();
+                        }
+                        choice = 0;
                         break;
                     default:
                         scene.MoveScene(SceneType.Main);

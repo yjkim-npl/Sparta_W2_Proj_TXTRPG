@@ -59,5 +59,6 @@ namespace W2Project
         public int GetBDef() { return fBDef;}
         public int GetBHP() { return fBHP; }
         public int GetPrice() { return fPrice;}
+        public int GetHierachy() { return fHierachy;}
     }
 }
