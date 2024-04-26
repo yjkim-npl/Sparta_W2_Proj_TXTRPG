@@ -18,19 +18,20 @@ namespace W2Project
         {
             lis_Items = new List<Item>();
             lis_stock = new List<int>();
-            lis_Items.Add(new Item("낡은 옷",      0, 0, 0, 0,  100, "낡은 옷"));
+            //                      Name          ID hie rnk type bA bD price Desc
+            lis_Items.Add(new Item("낡은 옷",      0, 0, 1, 2, 0, 0,  100, "낡은 옷"));
             lis_stock.Add(1);
-            lis_Items.Add(new Item("수련자 갑옷",  1, 1, 0, 5, 1000, "수련에 도움을 주는 갑옷입니다."));
+            lis_Items.Add(new Item("수련자 갑옷",  1, 1, 2, 2, 0, 5, 1000, "수련에 도움을 주는 갑옷입니다."));
+            lis_stock.Add(1);                         
+            lis_Items.Add(new Item("무쇠 갑옷",    2, 2, 4 ,2, 0, 4, 2000, "무쇠로 만들어져 튼튼한 갑옷입니다."));
+            lis_stock.Add(1);                         
+            lis_Items.Add(new Item("스파르타 갑옷",3, 4, 8, 2, 0, 3, 3500, "르탄이가 입었던 전설의 갑옷입니다."));
             lis_stock.Add(1);
-            lis_Items.Add(new Item("무쇠 갑옷",    2, 2, 0, 4, 2000, "무쇠로 만들어져 튼튼한 갑옷입니다."));
+            lis_Items.Add(new Item("낡은 검",      4, 1, 2, 1, 5, 0, 600, "녹으로 뒤덮인 검입니다."));
             lis_stock.Add(1);
-            lis_Items.Add(new Item("스파르타 갑옷",3, 3, 0, 3, 3500, "르탄이가 입었던 전설의 갑옷입니다."));
+            lis_Items.Add(new Item("청동 도끼",    5, 2, 4, 1, 3, 0, 1500, "어디선가 사용된 도끼입니다."));
             lis_stock.Add(1);
-            lis_Items.Add(new Item("낡은 검",      4, 1, 5, 0, 600, "녹으로 뒤덮인 검입니다."));
-            lis_stock.Add(1);
-            lis_Items.Add(new Item("청동 도끼",    5, 2, 3, 0, 1500, "어디선가 사용된 도끼입니다."));
-            lis_stock.Add(1);
-            lis_Items.Add(new Item("스파르타 창",  6, 3, 2, 0, 2500, "르탄이가 사용했던 전설의 창입니다."));
+            lis_Items.Add(new Item("스파르타 창",  6, 4, 8, 1, 2, 0, 2500, "르탄이가 사용했던 전설의 창입니다."));
             lis_stock.Add(1);
             if (instance == null)
                 instance = this;

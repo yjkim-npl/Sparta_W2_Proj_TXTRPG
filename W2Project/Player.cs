@@ -17,10 +17,15 @@ namespace W2Project
         int fDef;
         int fBonusDef;
         int fHP;
+        int fMaxHP;
         int fBonusHP;
         int fGold;
         int fExp;
         int fMaxExp;
+
+        int fWeaponLvl;
+        int fArmorLvl;
+        int fRingLvl;
 
         // hope to be use vector<pair(Item,bool)>...
         List<Item> lis_items;
@@ -38,14 +43,18 @@ namespace W2Project
             fDef = 4;
             fBonusDef = 0;
             fHP = 100;
+            fMaxHP = 100;
             fBonusHP = 0;
-            fGold = 10000;
+            fGold = 11200;
             fExp = 0;
             fMaxExp = 10;
             lis_items = new List<Item>();
             lis_equips = new List<bool>();
+            fWeaponLvl = 0;
+            fArmorLvl = 0;
+            fRingLvl = 0;
         }
-        public Player(int lvl, string name, string job, int atk, int batk, int def, int bdef, int HP, int bHP, int gold, int exp, int mexp, List<Item> items, List<bool> equips)
+        public Player(int lvl, string name, string job, int atk, int batk, int def, int bdef, int HP, int MHP, int bHP, int gold, int exp, int mexp, List<Item> items, List<bool> equips)
         {
             if (instance == null)
                 instance = this;
@@ -57,12 +66,23 @@ namespace W2Project
             fDef = def;
             fBonusDef = bdef;
             fHP = HP;
+            fMaxHP = MHP;
             fBonusHP = bHP;
             fGold = gold;
             fExp = exp;
             fMaxExp = mexp;
             lis_items = items;
             lis_equips = equips;
+            for (int a = 0; a < lis_items.Count; a++)
+            {
+                if (!lis_equips[a]) continue;
+                if (lis_items[a].GetBAtk() > 0 && (fWeaponLvl & lis_items[a].GetHierachy()) != lis_items[a].GetHierachy())
+                    fWeaponLvl += lis_items[a].GetHierachy();
+                if (lis_items[a].GetBDef() > 0 && (fArmorLvl & lis_items[a].GetHierachy()) != lis_items[a].GetHierachy())
+                    fArmorLvl += lis_items[a].GetHierachy();
+                if (lis_items[a].GetBHP() > 0 && (fRingLvl & lis_items[a].GetHierachy()) != lis_items[a].GetHierachy())
+                    fRingLvl += lis_items[a].GetHierachy();
+            }
         }
 
         public void AddExp(int exp) // Level up logic was also included
@@ -75,13 +95,14 @@ namespace W2Project
                 fMaxExp += fMaxExp;
                 fAtk += 5;
                 fDef += 2;
-                fHP = 100 + 50 * (fLvl -1);
+                fMaxHP = 100 + 50 * (fLvl - 1);
+                fHP = fMaxHP + fBonusHP;
             }
         }
 
         public void FullHealth()
         {
-            fHP = 100 + 50 * (fLvl - 1);
+            fHP = fMaxHP + fBonusHP;
         }
 
         public void Damage(int damage)
@@ -92,7 +113,7 @@ namespace W2Project
                 fLvl--;
                 fGold = fGold / 2;
                 fExp = fExp / 2;
-                fHP = 100 + 50 * (fLvl - 1) + fBonusHP;
+                fHP = fMaxHP + fBonusHP;
             }
         }
 
@@ -107,51 +128,63 @@ namespace W2Project
             fGold += gold;
         }
 
-        public string GetStatus(Status stat)
+        public int GetStatusInt(Status stat)
         {
             switch(stat)
             {
                 case Status.LVL:
-                    return fLvl.ToString();
+                    return fLvl;
                     break;
+                case Status.ATK:
+                    return fAtk;
+                    break;
+                case Status.BATK:
+                    return fBonusAtk;
+                    break;
+                case Status.DEF:
+                    return fDef;
+                    break;
+                case Status.BDEF:
+                    return fBonusDef;
+                    break;
+                case Status.HP:
+                    return fHP;
+                    break;
+                case Status.MHP:
+                    return fMaxHP;
+                    break;
+                case Status.BHP:
+                    return fBonusHP;
+                    break;
+                case Status.EXP:
+                    return fExp;
+                    break;
+                case Status.MEXP:
+                    return fMaxExp;
+                    break;
+                case Status.GOLD:
+                    return fGold;
+                    break;
+                default:
+                    GetStatusStr(stat);
+                    break;
+            }
+            return -1;
+        }
+        public string GetStatusStr(Status stat)
+        {
+            switch(stat)
+            {
                 case Status.NAME:
                     return fName;
                     break;
                 case Status.JOB:
                     return fJob;
                     break;
-                case Status.ATK:
-                    return fAtk.ToString();
-                    break;
-                case Status.BATK:
-                    return fBonusAtk.ToString();
-                    break;
-                case Status.DEF:
-                    return fDef.ToString();
-                    break;
-                case Status.BDEF:
-                    return fBonusDef.ToString();
-                    break;
-                case Status.HP:
-                    return fHP.ToString();
-                    break;
-                case Status.BHP:
-                    return fBonusHP.ToString();
-                    break;
-                case Status.EXP:
-                    return fExp.ToString();
-                    break;
-                case Status.MEXP:
-                    return fMaxExp.ToString();
-                    break;
-                case Status.GOLD:
-                    return fGold.ToString();
-                    break;
                 default:
-                    return "";
+                    return GetStatusInt(stat).ToString();
                     break;
             }
-            return "";
         }
         public int GetNItems()
         {
@@ -161,9 +194,23 @@ namespace W2Project
         {
             return lis_items[idx];
         }
-        public int GetHierachy(int idx)
+        public int GetHierachyLvl(Hierachy hier)
         {
-            return lis_items[idx].GetHierachy();
+            switch(hier)
+            {
+                case Hierachy.Weapon:
+                    return fWeaponLvl;
+                    break;
+                case Hierachy.Armor:
+                    return fArmorLvl;
+                    break;
+                case Hierachy.Ring:
+                    return fRingLvl;
+                    break;
+                default:
+                    return -1;
+                    break;
+            }
         }
         public bool GetEquipStatus(int idx)
         {
@@ -178,6 +225,21 @@ namespace W2Project
                 fBonusAtk += lis_items[idx].GetBAtk();
                 fBonusDef += lis_items[idx].GetBDef();
                 fBonusHP += lis_items[idx].GetBHP();
+                Hierachy type = (Hierachy)(int)lis_items[idx].GetType();
+                switch(type)
+                {
+                    case Hierachy.Weapon:
+                        fWeaponLvl += lis_items[idx].GetHierachy();
+                        break;
+                    case Hierachy.Armor:
+                        fArmorLvl += lis_items[idx].GetHierachy();
+                        break;
+                    case Hierachy.Ring:
+                        fRingLvl += lis_items[idx].GetHierachy();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         public void UpEquip(int idx)
@@ -188,6 +250,21 @@ namespace W2Project
                 fBonusAtk -= lis_items[idx].GetBAtk();
                 fBonusDef -= lis_items[idx].GetBDef();
                 fBonusHP -= lis_items[idx].GetBHP();
+                Hierachy type = (Hierachy)(int)lis_items[idx].GetType();
+                switch(type)
+                {
+                    case Hierachy.Weapon:
+                        fWeaponLvl -= lis_items[idx].GetHierachy();
+                        break;
+                    case Hierachy.Armor:
+                        fArmorLvl -= lis_items[idx].GetHierachy();
+                        break;
+                    case Hierachy.Ring:
+                        fRingLvl -= lis_items[idx].GetHierachy();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         public void BuyItem(Item item)
@@ -207,10 +284,18 @@ namespace W2Project
             DEF,
             BDEF,
             HP,
+            MHP,
             BHP,
             GOLD,
             EXP,
             MEXP
+        }
+        public enum Hierachy
+        {
+            None,
+            Weapon,
+            Armor,
+            Ring
         }
     }
 }

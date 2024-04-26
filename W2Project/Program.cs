@@ -29,7 +29,9 @@ namespace W2Project
         {
             bool isPlaying = true;
             Console.SetWindowSize(90, 30);
-            // Current location is W2Project/W2Project/bin/Debug/net6.0/ 
+
+            // Current location is W2Project/W2Project/bin/Debug/net6.0/
+            // Load items from the list(csv)
             string str_item_list = "../../../../Assets/ItemList.csv";
             item_list = new List<Item>();
             StreamReader sr_item = new StreamReader(str_item_list);
@@ -43,7 +45,9 @@ namespace W2Project
                     List<string> comp = line.Split(',').ToList();
                     //                string[] comp = new string[8];
                     //                    comp = line.Split(',');
-                    Item item = new Item(comp[1], int.Parse(comp[2]), int.Parse(comp[3]), int.Parse(comp[4]), int.Parse(comp[5]), int.Parse(comp[6]), comp[7]);
+                    int hier = comp[3] == "s" ? 1 : comp[3] == "m" ? 2 : comp[3] == "l" ? 4 : 0;
+                    int rank = comp[4] == "n" ? 1 : comp[4] == "r" ? 2 : comp[4] == "u" ? 4 : comp[4] == "l" ? 8 : 0;
+                    Item item = new Item(comp[1], int.Parse(comp[2]), hier, rank, int.Parse(comp[5]), int.Parse(comp[6]), int.Parse(comp[7]), int.Parse(comp[8]), comp[9]);
                     item_list.Add(item);
                 }
                 else
@@ -76,8 +80,8 @@ namespace W2Project
                     stats.Add(comp);
                 }
                 while (comp != null);
-                List<string>items = stats[12].Split(' ').ToList();
-                List<string>equip = stats[13].Split(' ').ToList();
+                List<string>items = stats[13].Split(' ').ToList();
+                List<string>equip = stats[14].Split(' ').ToList();
                 List<Item> items_list = new List<Item>();
                 List<bool> equip_list = new List<bool>();
                 for (int a = 0; a < items.Count; a++)
@@ -102,18 +106,19 @@ namespace W2Project
                     }
                 }
                 player = new Player(
-                    int.Parse(stats[0]),
-                    stats[1],
-                    stats[2],
-                    int.Parse(stats[3]),
-                    int.Parse(stats[4]),
-                    int.Parse(stats[5]),
-                    int.Parse(stats[6]),
-                    int.Parse(stats[7]),
-                    int.Parse(stats[8]),
-                    int.Parse(stats[9]),
-                    int.Parse(stats[10]),
-                    int.Parse(stats[11]),
+                    int.Parse(stats[0]), // lvl
+                    stats[1],            // name
+                    stats[2],            // job
+                    int.Parse(stats[3]), // atk
+                    int.Parse(stats[4]), // batk
+                    int.Parse(stats[5]), // def
+                    int.Parse(stats[6]), // bdef
+                    int.Parse(stats[7]), // cHP
+                    int.Parse(stats[8]), // mHP
+                    int.Parse(stats[9]), // bHP
+                    int.Parse(stats[10]),// Gold
+                    int.Parse(stats[11]),// cExp
+                    int.Parse(stats[12]),// mExp
                     items_list,
                     equip_list
                     );
@@ -149,7 +154,7 @@ namespace W2Project
                             else
                                 wantSave = false;
                         }
-                        while (choice ==4 &&int.Parse(Player.instance.GetStatus(Player.Status.HP)) <= 10)
+                        while (choice ==4 && Player.instance.GetStatusInt(Player.Status.HP) <= 10)
                         {
                             Console.WriteLine("휴식이 필요합니다.");
                             choice = Choice(0, 5);
@@ -199,11 +204,11 @@ namespace W2Project
                         break;
                     case 5:
                         if (
-                            (int.Parse(Player.instance.GetStatus(Player.Status.HP))) +
-                            (int.Parse(Player.instance.GetStatus(Player.Status.BHP))) <
+                            (Player.instance.GetStatusInt(Player.Status.HP)) +
+                            (Player.instance.GetStatusInt(Player.Status.BHP)) <
                             100 + 
-                            50*(int.Parse(Player.instance.GetStatus(Player.Status.LVL)) -1) +
-                            int.Parse(Player.instance.GetStatus(Player.Status.BHP))
+                            50*(Player.instance.GetStatusInt(Player.Status.LVL) -1) +
+                                Player.instance.GetStatusInt(Player.Status.BHP)
                             )
                         {
                             Player.instance.FullHealth();
@@ -226,23 +231,24 @@ namespace W2Project
                 {
                     sw.WriteLine(prev_player_list[a]);
                 }
-                sw.WriteLine(Player.instance.GetStatus(Player.Status.NAME));
+                sw.WriteLine(Player.instance.GetStatusStr(Player.Status.NAME));
                 sw.Close();
 
                 // Save the data to dat file
-                StreamWriter sw_dat = new StreamWriter($"../../../../Assets/PlayerData/{Player.instance.GetStatus(Player.Status.NAME)}.dat");
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.LVL));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.NAME));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.JOB));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.ATK));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.BATK));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.DEF));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.BDEF));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.HP));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.BHP));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.GOLD));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.EXP));
-                sw_dat.WriteLine(Player.instance.GetStatus(Player.Status.MEXP));
+                StreamWriter sw_dat = new StreamWriter($"../../../../Assets/PlayerData/{Player.instance.GetStatusStr(Player.Status.NAME)}.dat");
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.LVL));
+                sw_dat.WriteLine(Player.instance.GetStatusStr(Player.Status.NAME));
+                sw_dat.WriteLine(Player.instance.GetStatusStr(Player.Status.JOB));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.ATK));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.BATK));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.DEF));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.BDEF));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.HP));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.MHP));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.BHP));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.GOLD));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.EXP));
+                sw_dat.WriteLine(Player.instance.GetStatusInt(Player.Status.MEXP));
                 for(int a=0; a<Player.instance.GetNItems(); a++)
                 {
                     sw_dat.Write(Player.instance.GetItem(a).GetID() + " ");
