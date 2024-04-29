@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -9,6 +10,11 @@ namespace W2Project
 {
     internal class Scene
     {
+        public int curPageInven = 0;
+        public int curPageShop = 0;
+        public int nItemsOnPage = 5;
+        int maxPageInven = 0;
+        int maxPageShop = 0;
         public Scene()
         {
         }
@@ -130,10 +136,17 @@ namespace W2Project
                     Console.SetCursorPosition(5, 4); Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
 
                     Console.SetCursorPosition(7, 7); Console.WriteLine("[아이템 목록]");
-                    for(int a=0; a<Player.instance.GetNItems(); a++)
+                    maxPageInven = Player.instance.GetNItems() / nItemsOnPage;
+                    curPageInven += (opt==8?-1:opt==9?1:0);
+                    if(curPageInven <0)
+                        curPageInven = 0;
+                    if(curPageInven > maxPageInven)
+                        curPageInven = maxPageInven;
+                        Console.SetCursorPosition(65, 7); Console.WriteLine("{0} p / {1} p  (8)< | >(9)",curPageInven,maxPageInven);
+                    for(int a=0; a<(curPageInven==maxPageInven?Player.instance.GetNItems()%nItemsOnPage:nItemsOnPage); a++)
                     {
-                        Item item = Player.instance.GetItem(a);
-                        bool isEquip = Player.instance.GetEquipStatus(a);
+                        Item item = Player.instance.GetItem(a +nItemsOnPage*curPageInven);
+                        bool isEquip = Player.instance.GetEquipStatus(a +nItemsOnPage*curPageInven);
                         Console.SetCursorPosition(7, 8+a);
                         if (opt == 0)
                             Console.WriteLine(isEquip ? "-  [E] " : "- ");
@@ -201,77 +214,86 @@ namespace W2Project
                         Console.WriteLine(item.GetExplanation());
 
                     }
+                    Console.SetCursorPosition(5, 19); Console.WriteLine("1. 장착관리");
+                    Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-70}","0. 나가기");
+                    Console.SetCursorPosition(5, 21); Console.WriteLine(" ");
+
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("원하시는 행동을 입력해주세요");
+                    Console.SetCursorPosition(5, 23); Console.Write(">>  ");
+                    Console.SetCursorPosition(8, 23);
 
                     if (opt == 1)
                     {
+                        Console.SetCursorPosition(65, 7); Console.WriteLine("{0,23}","");
                         Console.SetCursorPosition(5, 18); Console.WriteLine("장착 / 장착 해제 하고싶은 아이템의 번호를 입력하세요");
+                        Console.SetCursorPosition(5, 19); Console.WriteLine("{0,15}","");
                         Console.SetCursorPosition(5, 20); Console.WriteLine("0. 나가기");
                         Console.SetCursorPosition(5, 23); Console.Write(">>     ");
                         Console.SetCursorPosition(8, 23);
-                        int itemNo = Program.Choice(1,Player.instance.GetNItems());
+                        int itemNo = Program.Choice(0,curPageInven==maxPageInven?Player.instance.GetNItems()%nItemsOnPage:nItemsOnPage);
                         int fType = new int();
                         int itemHier = new int();
                         int fWeaponLvl = new int();
                         int fArmorLvl = new int(); 
-                        if(itemNo !=0)
+                        while (itemNo != 0 && itemNo <=nItemsOnPage)
                         {
-                            fType      = (int)Player.instance.GetItem(itemNo - 1).GetType();
-                            itemHier   = Player.instance.GetItem(itemNo - 1).GetHierachy();
+                            fType      = (int)Player.instance.GetItem(nItemsOnPage*curPageInven + itemNo - 1).GetType();
+                            itemHier   = Player.instance.GetItem(nItemsOnPage*curPageInven + itemNo - 1).GetHierachy();
                             fWeaponLvl = Player.instance.GetHierachyLvl(Player.Hierachy.Weapon);
                             fArmorLvl  = Player.instance.GetHierachyLvl(Player.Hierachy.Armor);
-                        }
-                        while (itemNo != 0)
-                        {
                             if (itemNo < 0 || itemNo > Player.instance.GetNItems())
                             {
                                 Console.SetCursorPosition(5, 18); Console.WriteLine("잘못된 입력입니다.장착 / 장착 해제 하고싶은 아이템의 번호를 입력하세요");
                             }
-                            else if (itemNo != 0 &&(Player.instance.GetHierachyLvl((Player.Hierachy) fType) >> itemHier) != 0)
+                            else if (itemNo != 0 && (Player.instance.GetHierachyLvl((Player.Hierachy) fType) >> ((int)Math.Log2(itemHier)+1)) != 0)
                             {
                                 Console.SetCursorPosition(5, 18); Console.WriteLine("착용하고 있는 사이즈보다 작습니다. 큰 사이즈의 아이템을 벗어주세요.            ");
                                 Console.SetCursorPosition(5, 19); Console.WriteLine("장착 / 장착 해제 하고싶은 아이템의 번호를 입력하세요");
                             }
-                            else if (Player.instance.GetEquipStatus(itemNo - 1) == true)
+                            else if (Player.instance.GetEquipStatus(nItemsOnPage*curPageInven + itemNo - 1) == true)
                             {
-                                Player.instance.UpEquip(itemNo - 1);
+                                Player.instance.UpEquip(nItemsOnPage*curPageInven + itemNo - 1);
                                 Console.SetCursorPosition(5, 18); Console.WriteLine("장착이 해제되었습니다.                                                     ");
                                 Console.SetCursorPosition(5, 19); Console.WriteLine("장착 / 장착 해제 하고싶은 아이템의 번호를 입력하세요");
                                 Console.SetCursorPosition(7, 7 + itemNo);
                                 Console.WriteLine("{0}.     ", itemNo);
                             }
-                            else if (Player.instance.GetEquipStatus(itemNo - 1) == false)
+                            else if (Player.instance.GetEquipStatus(nItemsOnPage*curPageInven + itemNo - 1) == false)
                             {
-                                Player.instance.Equip(itemNo - 1);
+                                Player.instance.Equip(nItemsOnPage*curPageInven + itemNo - 1);
                                 Console.SetCursorPosition(5, 18); Console.WriteLine("장착되었습니다.                                                       ");
                                 Console.SetCursorPosition(5, 19); Console.WriteLine("장착 / 장착 해제 하고싶은 아이템의 번호를 입력하세요");
                                 Console.SetCursorPosition(7, 7 + itemNo);
-                                Console.WriteLine("{0}  [E] ", itemNo);
+                                Console.WriteLine("{0}. [E] ", itemNo);
                             }
                             Console.SetCursorPosition(5, 20); Console.WriteLine("0. 나가기");
                             Console.SetCursorPosition(5, 23); Console.Write(">>     ");
                             Console.SetCursorPosition(8, 23);
-                            itemNo = Program.Choice(0,Player.instance.GetNItems());
+                            itemNo = Program.Choice(0,curPageInven==maxPageInven?Player.instance.GetNItems()%nItemsOnPage:nItemsOnPage);
+                            Console.SetCursorPosition(8, 23);
                             if (itemNo != 0)
                             {
-                                fType = (int)Player.instance.GetItem(itemNo - 1).GetType();
-                                itemHier = Player.instance.GetItem(itemNo - 1).GetHierachy();
+                                fType = (int)Player.instance.GetItem(nItemsOnPage*curPageInven + itemNo - 1).GetType();
+                                itemHier = Player.instance.GetItem(nItemsOnPage*curPageInven + itemNo - 1).GetHierachy();
                                 fWeaponLvl = Player.instance.GetHierachyLvl(Player.Hierachy.Weapon);
                                 fArmorLvl = Player.instance.GetHierachyLvl(Player.Hierachy.Armor);
                             }
                         }
-                        for(int a=0; a<Player.instance.GetNItems(); a++)
+                        for(int a=0; a<(curPageInven==maxPageInven?Player.instance.GetNItems()%nItemsOnPage:nItemsOnPage); a++)
                         {
                             Console.SetCursorPosition(7,8+ a);
                             Console.WriteLine("- ");
                         }
+                        if (opt == 0)
+                        {
+                            Console.SetCursorPosition(65, 7); Console.WriteLine("{0} p / {1} p  (8)< | >(9)", curPageInven, maxPageInven);
+                        }
+                        Console.SetCursorPosition(5, 18); Console.WriteLine("{0,-70}","");
+                        Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-60}","1. 장착관리");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("0. 나가기                                             ");
+                        Console.SetCursorPosition(5, 22); Console.WriteLine("원하시는 행동을 입력해주세요                          ");
+                        Console.SetCursorPosition(5, 23); Console.Write(">>  ");
                     }
-                    Console.SetCursorPosition(5, 18); Console.WriteLine("1. 장착관리                                                          ");
-                    Console.SetCursorPosition(5, 19); Console.WriteLine("0. 나가기                                             ");
-                    Console.SetCursorPosition(5, 20); Console.WriteLine("                                          ");
-
-                    Console.SetCursorPosition(5, 22); Console.WriteLine("원하시는 행동을 입력해주세요");
-                    Console.SetCursorPosition(5, 23); Console.Write(">>  ");
-                    Console.SetCursorPosition(8, 23);
                     break;
                 case SceneType.Shop:
                     Console.SetCursorPosition(5, 3);
@@ -283,9 +305,16 @@ namespace W2Project
                     Console.SetCursorPosition(7, 6); Console.WriteLine("[보유골드]");
                     Console.SetCursorPosition(7, 7); Console.WriteLine("{0,5} G", Player.instance.GetStatusInt(Player.Status.GOLD));
                     Console.SetCursorPosition(7, 9); Console.WriteLine("[아이템 목록]");
-                    for(int a=0; a<Shop.instance.GetNItem(); a++)
+                    maxPageShop = Shop.instance.GetNItem() / nItemsOnPage;
+                    curPageShop += (opt==8?-1:opt==9?1:0);
+                    if(curPageShop <0)
+                        curPageShop = 0;
+                    if(curPageShop > maxPageShop)
+                        curPageShop = maxPageShop;
+                        Console.SetCursorPosition(65, 9); Console.WriteLine("{0} p / {1} p  (8)< | >(9)",curPageShop,maxPageShop);
+                    for(int a=0; a<(curPageShop==maxPageShop?Shop.instance.GetNItem()%nItemsOnPage:nItemsOnPage); a++)
                     {
-                        Item item = Shop.instance.GetItem(a);
+                        Item item = Shop.instance.GetItem(a + nItemsOnPage*curPageShop);
                         Console.SetCursorPosition(7, 10+a);
                         Console.WriteLine("- ");
                         Console.SetCursorPosition(10, 10 + a);
@@ -306,24 +335,24 @@ namespace W2Project
                         Console.SetCursorPosition(50, 10 + a); Console.WriteLine(item.GetExplanation());
                     }
 
-                    Console.SetCursorPosition(5,18); Console.WriteLine("1. 아이템 구매");
-                    Console.SetCursorPosition(5,19); Console.WriteLine("0. 나가기");
+                    Console.SetCursorPosition(5,19); Console.WriteLine("1. 아이템 구매");
+                    Console.SetCursorPosition(5,20); Console.WriteLine("0. 나가기");
                     if (opt == 1)
                     {
-                        for(int a=0; a<Shop.instance.GetNItem(); a++)
+                        for(int a=0; a<(curPageShop==maxPageShop?Shop.instance.GetNItem()%nItemsOnPage:nItemsOnPage); a++)
                         {
                             Console.SetCursorPosition(7, 10+a);
                             Console.WriteLine("{0} ",a+1);
                         }
                         Console.SetCursorPosition(5, 18); Console.WriteLine("구매하고싶은 아이템의 번호를 입력하세요.");
-                        Console.SetCursorPosition(5, 19); Console.WriteLine("0. 나가기");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("0. 나가기");
                         Console.SetCursorPosition(5, 23); Console.Write(">>     ");
                         Console.SetCursorPosition(8, 23);
-                        int itemNo = Program.Choice(0,Shop.instance.GetNItem());
+                        int itemNo = Program.Choice(0,curPageShop==maxPageShop?Shop.instance.GetNItem()%nItemsOnPage:nItemsOnPage);
                         //int itemNo = int.Parse(Console.ReadLine());
                         while(itemNo !=0)
                         {
-                            Console.SetCursorPosition(5, 19); Console.WriteLine("0. 나가기");
+                            Console.SetCursorPosition(5, 20); Console.WriteLine("0. 나가기");
                             Console.SetCursorPosition(5, 23); Console.Write(">>     ");
                             Console.SetCursorPosition(5, 18);
                             if(Player.instance.GetStatusInt(Player.Status.GOLD) < Shop.instance.GetItem(itemNo-1).GetPrice())
@@ -345,11 +374,12 @@ namespace W2Project
                             Console.SetCursorPosition(8, 23);
                             itemNo = Program.Choice(0, Shop.instance.GetNItem());
                         }
-                        for(int a=0; a<Shop.instance.GetNItem(); a++)
+                        for(int a=0; a<(curPageShop==maxPageShop?Shop.instance.GetNItem()%nItemsOnPage:nItemsOnPage); a++)
                         {
                             Console.SetCursorPosition(7,10+ a); Console.WriteLine("- ");
                         }
-                        Console.SetCursorPosition(5, 18); Console.WriteLine("1. 아이템 구매                                         ");
+                        Console.SetCursorPosition(5, 18); Console.WriteLine("{0,50}","");
+                        Console.SetCursorPosition(5, 19); Console.WriteLine("1. 아이템 구매                                         ");
                     }
 
                     Console.SetCursorPosition(5, 22); Console.WriteLine("원하시는 행동을 입력해주세요                             ");
