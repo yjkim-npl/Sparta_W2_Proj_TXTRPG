@@ -10,14 +10,23 @@ namespace W2Project
         {
             return text.PadLeft((width - text.Length) / 2 + text.Length).PadRight(width);
         }
-        public static int Choice(int min, int max)
+        public static int Choice(int min, int max, int cutmin = -1, int cutmax = -1)
         {
+            // 1 3 (-1 -1 ) 4
             string in_str = Console.ReadLine();
             int choice;
-            while(!int.TryParse(in_str, out choice) || !(choice >= min && choice <=max))
+            while(!int.TryParse(in_str, out choice) || !(choice >= min && choice <=max) || ((cutmin==-1&&cutmax==-1)?false:(choice >= cutmin && choice <= cutmax)))
             {
-                Console.SetCursorPosition(5, 22);
-                Console.WriteLine("원하시는 행동을 입력해주세요 ({0} ~ {1}중에서 골라주세요)",min, max);
+                if(cutmin == -1 && cutmax == -1)
+                { 
+                    Console.SetCursorPosition(5, 22);
+                    Console.WriteLine("원하시는 행동을 입력해주세요 ({0} ~ {1}중에서 골라주세요)",min, max);
+                }
+                else
+                { 
+                    Console.SetCursorPosition(5, 22);
+                    Console.WriteLine("{0} ~ {1} 제외한 {2} ~ {3}중에서 골라주세요,",cutmin,cutmax,min, max);
+                }
                 Console.SetCursorPosition(5, 23);
                 Console.Write(">>     ");
                 Console.SetCursorPosition(8, 23);
@@ -47,7 +56,7 @@ namespace W2Project
                     //                    comp = line.Split(',');
                     int hier = comp[3] == "s" ? 1 : comp[3] == "m" ? 2 : comp[3] == "l" ? 4 : 0;
                     int rank = comp[4] == "n" ? 1 : comp[4] == "r" ? 2 : comp[4] == "u" ? 4 : comp[4] == "l" ? 8 : 0;
-                    Item item = new Item(comp[1], int.Parse(comp[2]), hier, rank, int.Parse(comp[5]), int.Parse(comp[6]), int.Parse(comp[7]), int.Parse(comp[8]), comp[9]);
+                    Item item = new Item(comp[1], int.Parse(comp[2]), hier, rank, int.Parse(comp[5]), int.Parse(comp[6]), int.Parse(comp[7]), int.Parse(comp[8]), int.Parse(comp[9]), comp[10]);
                     item_list.Add(item);
                 }
                 else
@@ -170,14 +179,14 @@ namespace W2Project
                         if(equip_opt == 1)
                         {
                             scene.MoveScene(SceneType.Inventory, equip_opt);
-                            equip_opt = Choice(0,1);
+                            equip_opt = Choice(0,9,scene.nItemsOnPage+1,7);
                             if (equip_opt == 0)
                                 choice = equip_opt;
                         }
                         else
                         {
-                            scene.MoveScene(SceneType.Inventory);
-                            equip_opt = Choice(0,1);
+                            scene.MoveScene(SceneType.Inventory, equip_opt);
+                            equip_opt = Choice(0, 9, 2, 7);
                             if (equip_opt == 0)
                                 choice = equip_opt;
                         }
@@ -186,14 +195,14 @@ namespace W2Project
                         if (shop_opt == 1)
                         {
                             scene.MoveScene(SceneType.Shop, shop_opt);
-                            shop_opt = Choice(0, 1);
+                            shop_opt = Choice(0, 9,scene.nItemsOnPage+1,7);
                             if (shop_opt == 0)
                                 choice = 0;
                         }
                         else
                         {
-                            scene.MoveScene(SceneType.Shop);
-                            shop_opt = Choice(0, 1);
+                            scene.MoveScene(SceneType.Shop, shop_opt);
+                            shop_opt = Choice(0, 9, 2, 7);
                             if (shop_opt == 0)
                                 choice = 0;
                         }
