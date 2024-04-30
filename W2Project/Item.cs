@@ -35,7 +35,7 @@ namespace W2Project
 //        {
 ////            fName = 
 //        }
-        public Item(string name, int id, int hier, int rank, int typeNo, int bAtk, int bDef,  int price, string expalin)
+        public Item(string name, int id, int hier, int rank, int typeNo, int bAtk, int bDef, int bHP, int price, string expalin)
         {
             fName = name;
             fID = id;
@@ -62,6 +62,7 @@ namespace W2Project
             }
             fBAtk = bAtk;
             fBDef = bDef;
+            fBHP = bHP;
             fPrice = price;
             fExplain = expalin;
             if (!File.Exists($"../../../../Assets/Items/{fID}.dat"))
