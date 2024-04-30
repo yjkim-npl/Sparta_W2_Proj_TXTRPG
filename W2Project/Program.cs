@@ -138,6 +138,21 @@ namespace W2Project
                 player = new Player(username);
             }
 
+            scene.MoveScene(SceneType.Jobs);
+            string jobs = Console.ReadLine();
+            if (int.Parse(jobs) == 1)
+            {
+                Player.instance.Warrior();
+            }
+            else if (int.Parse(jobs) == 2)
+            {
+                Player.instance.Archer();
+            }
+            else if (int.Parse(jobs) == 3)
+            {
+                Player.instance.Chief();
+            }
+
             // MainScene
             scene.MoveScene(SceneType.Main);
             int choice = Choice(1, 3);

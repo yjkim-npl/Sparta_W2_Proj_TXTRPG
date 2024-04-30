@@ -54,6 +54,7 @@ namespace W2Project
             fArmorLvl = 0;
             fRingLvl = 0;
         }
+
         public Player(int lvl, string name, string job, int atk, int batk, int def, int bdef, int HP, int MHP, int bHP, int gold, int exp, int mexp, List<Item> items, List<bool> equips)
         {
             if (instance == null)
@@ -83,6 +84,32 @@ namespace W2Project
                 if (lis_items[a].GetBHP() > 0 && (fRingLvl & lis_items[a].GetHierachy()) != lis_items[a].GetHierachy())
                     fRingLvl += lis_items[a].GetHierachy();
             }
+        }
+
+        public void Warrior()
+        {
+            fJob = "Warrior";
+            fHP = 200;
+            fMaxHP = 200;
+            fDef = 8;
+        }
+
+        public void Archer()
+        {
+            fJob = "Archer";
+            fAtk = 15;
+            fHP = 60;
+            fMaxHP = 60;
+            fDef = 2;
+        }
+
+        public void Chief()
+        {
+            fJob = "Chief";
+            fAtk = 13;
+            fHP = 80;
+            fMaxHP = 80;
+            fDef = 3;
         }
 
         public void AddExp(int exp) // Level up logic was also included
