@@ -30,6 +30,14 @@ namespace W2Project
                     Console.Write("이름을 입력하세요: ");
                     Console.SetCursorPosition(55, 20);
                     break;
+                case SceneType.Jobs:
+                    Console.SetCursorPosition(0, 10);
+                    Console.WriteLine("플레이어의 직업을 선택해주세요.");
+                    Console.SetCursorPosition(2, 12); Console.WriteLine("1. 전사");
+                    Console.SetCursorPosition(12, 12); Console.WriteLine("2. 궁수");
+                    Console.SetCursorPosition(22, 12); Console.WriteLine("3. 도적");
+                    Console.SetCursorPosition(0, 14); Console.Write(">>");
+                    break;
                 case SceneType.Main:
                     Console.SetCursorPosition(5, 3);
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
@@ -434,6 +442,7 @@ namespace W2Project
     public enum SceneType
     {
         Start,
+        Jobs,
         Main,
         Status,
         Inventory,
