@@ -25,7 +25,6 @@ namespace W2Project
         public void BattlePhase()
         {
             BaseScene();
-            BaseBattleScene(); // 기본 배틀 UI 양식 불러오기
             Console.SetCursorPosition(5, 5); Console.WriteLine("몬스터 무리가 나타났다!");
 
             bool continueEncounter = true; // 전투 지속 여부
@@ -41,17 +40,20 @@ namespace W2Project
 
             while (!player.Dead() && continueEncounter) // 플레이어가 죽지 않았고, 전투가 지속중일 때,
             {
-                monsterHuntList(); // 몬스터 리스트 불러오기
-                BaseBattleScene(); // 기본 배틀 UI 양식 불러오기
-                string input = Console.ReadLine();
 
+                BaseBattleScene(); // 기본 배틀 UI 양식 불러오기
+                monsterHuntList(); // 몬스터 리스트 불러오기
+
+                Console.SetCursorPosition(8, 23); string input = Console.ReadLine();
+                Console.SetCursorPosition(8, 23);
 
                 if (input == "1")
                 {
-                    Console.SetCursorPosition(5, 19); Console.WriteLine("               ");
-                    Console.SetCursorPosition(5, 20); Console.WriteLine("               ");
-                    Console.SetCursorPosition(5, 22); Console.WriteLine("몬스터 번호를 입력하세요 ");
+                    Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-45}", " ");
+                    Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-45}", " ");
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("{0,-45}", "몬스터 번호를 입력하세요. ");
                     Console.SetCursorPosition(5, 23); Console.Write(">>     ");
+                    Console.SetCursorPosition(40, 12); Console.Write("             ");
                     Console.SetCursorPosition(8, 23);
 
                     int monsterChoice;
@@ -69,16 +71,17 @@ namespace W2Project
 
                         if (enemy.Health <= 0)
                         {
-                            Console.Write(new string(' ', Console.WindowWidth - Console.CursorLeft));
-                            Console.SetCursorPosition(5, 22); Console.WriteLine("이미 죽은 몬스터입니다. 다른 몬스터를 선택하세요.");
+                            BaseScene();
+                            Console.SetCursorPosition(5, 22); Console.WriteLine("이미 죽은 몬스터입니다.");
                             continue; // 반복문 상단으로 이동하여 다시 입력 요청
                         }
 
+                        Console.SetCursorPosition(5, 22); Console.WriteLine("                               ");
                         int playerDamage = CriticalAttackDamage();
                         int enemyHealthBeforeAttack = enemy.Health; // 몬스터 공격 받기 전 체력
                         enemy.Damage(playerDamage);
                         int enemyHealthAfterAttack = enemy.Health; // 몬스터 공격 받은 후 체력
-                        Console.SetCursorPosition(7, 12); Console.WriteLine("{0,-60}", $"몬스터의 현재 체력 : {enemyHealthBeforeAttack} -> {enemyHealthAfterAttack}"); // 결과
+                        Console.SetCursorPosition(7, 12); Console.WriteLine("{0,-25}", $"몬스터의 현재 체력 : {enemyHealthBeforeAttack} -> {enemyHealthAfterAttack}"); // 결과
                     }
                     else
                     {
@@ -163,9 +166,7 @@ namespace W2Project
             Console.WriteLine("{0,-60}", $"현재 체력 : {Player.instance.GetStatusInt(Player.Status.HP)}");
             Console.SetCursorPosition(5, 19); Console.WriteLine("1. 몬스터 공격");
             Console.SetCursorPosition(5, 20); Console.WriteLine("0. 도망");
-            Console.SetCursorPosition(5, 22); Console.WriteLine("                               ");
-
-            Console.SetCursorPosition(5, 23); Console.Write(">>     ");
+            Console.SetCursorPosition(5, 23); Console.Write(">>      ");
             Console.SetCursorPosition(8, 23);
         }
 
@@ -220,10 +221,11 @@ namespace W2Project
         public int CriticalAttackDamage()
         {
             int baseDamage = Player.instance.GetStatusInt(Status.ATK);
+            bool isCritical = IsCriticalHit();
             if (IsCriticalHit())
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("치명타 발생!");
+                Console.SetCursorPosition(40, 12); Console.WriteLine("치명타!");
                 baseDamage =(int)Math.Round(baseDamage * 1.6); // 치명타가 발생하면 공격력을 1.6 배로 증가
                 Console.ResetColor();
             }
@@ -232,7 +234,7 @@ namespace W2Project
 
         private bool IsCriticalHit() // 치명타 발생 확률 설정
         {
-            int criticalChance = 100; // 15%
+            int criticalChance = 15; // 15%
             return random.Next(100) < criticalChance;
         }
 
