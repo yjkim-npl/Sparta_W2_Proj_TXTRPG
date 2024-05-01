@@ -86,7 +86,8 @@ namespace W2Project
                     else
                     {
                         // 잘못된 입력이거나 몬스터 번호가 잘못된 경우
-                        Console.SetCursorPosition(36, 22); Console.WriteLine("(1 ~ 3중에서 골라주세요) ");
+                        string message = enemiesList.Count == 1 ? "1에서" : $"1 ~ {enemiesList.Count}에서";
+                        Console.SetCursorPosition(5, 22); Console.WriteLine($"{message} 골라주세요         ");
                         continue;
                     }
 
@@ -144,6 +145,12 @@ namespace W2Project
                     BaseScene();
                     Console.SetCursorPosition(5, 5); Console.WriteLine("당신은 도망쳤다!");
                     return;
+                }
+                else
+                {
+                    // 잘못된 입력이거나 몬스터 번호가 잘못된 경우
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("0 ~ 1 에서 골라주세요         ");
+                    continue;
                 }
             }
         }
