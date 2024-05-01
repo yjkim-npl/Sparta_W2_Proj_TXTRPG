@@ -6,6 +6,8 @@ namespace W2Project
     internal class Program
     {
         public static List<Item> item_list;
+        public static List<Quest> quest_list;
+        public static List<Monster> monster_list;
         public static string CenterAlign(string text, int width)
         {
             return text.PadLeft((width - text.Length) / 2 + text.Length).PadRight(width);
