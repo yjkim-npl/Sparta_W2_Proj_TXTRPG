@@ -108,7 +108,10 @@ namespace W2Project
                         Console.ResetColor();
 
                         int playerHealthBeforeAttack = Player.instance.GetStatusInt(Player.Status.HP); //플레이어 공격 받기 전 체력
-                        Player.instance.Damage(enemy.Attack);
+                        int PlayerDeffence = Player.instance.GetStatusInt(Player.Status.DEF);
+                        int damage = enemy.Attack - PlayerDeffence;
+                        damage = Math.Max(0, damage);
+                        Player.instance.Damage(damage);
                         int playerHealthAfterAttack = Player.instance.GetStatusInt(Player.Status.HP); // 플레이어 공격 받은 후 체력
 
                         Console.SetCursorPosition(7, 15);
@@ -116,7 +119,6 @@ namespace W2Project
 
                         if (Player.instance.GetStatusInt(Player.Status.HP) <= 0)
                         {
-                            
                             continueEncounter = false; // 전투 종료
                             BattleFailureResult();
                             return;
@@ -233,7 +235,7 @@ namespace W2Project
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.SetCursorPosition(40, 12); Console.WriteLine("치명타!");
-                baseDamage =(int)Math.Round(baseDamage * 1.6); // 치명타가 발생하면 공격력을 1.6 배로 증가
+                baseDamage = (int)Math.Round(baseDamage * 1.6); // 치명타가 발생하면 공격력을 1.6 배로 증가
                 Console.ResetColor();
             }
             return baseDamage;
