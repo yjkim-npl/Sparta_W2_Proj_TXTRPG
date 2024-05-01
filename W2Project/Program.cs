@@ -74,12 +74,14 @@ namespace W2Project
             string username = Console.ReadLine();
 
             Player player;
+            // Check the Player name on Player list
             if(!File.Exists("../../../../Assets/PlayerList.txt"))
             {
                 StreamWriter sw = new StreamWriter("../../../../Assets/PlayerList.txt");
                 sw.Close();
             }
             string[] playerList = File.ReadAllLines("../../../../Assets/PlayerList.txt");
+            // If there are data of previous play, load it and reconstruct the player
             if(playerList.Contains(username))
             {
                 StreamReader sr = new StreamReader($"../../../../Assets/PlayerData/{username}.dat");

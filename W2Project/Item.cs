@@ -95,6 +95,7 @@ namespace W2Project
         None,
         Weapon,
         Armor,
-        Ring
+        Ring,
+        Use
     }
 }
