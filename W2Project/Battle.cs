@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.IO;
 using static System.Net.WebRequestMethods;
 using static W2Project.Player;
 
@@ -155,6 +156,7 @@ namespace W2Project
                     continue;
                 }
             }
+
         }
 
         public void BaseScene() // 기본 UI Mark.1
@@ -257,41 +259,18 @@ namespace W2Project
                 Console.WriteLine("{0,-60}", $"몬스터 {j + 1}: {(enemy.Health > 0 ? enemy.Name : "DEAD")}, 체력: {enemy.Health}");
             }
         }
-        public class Enemy // 몬스터 INFO TEST용
-        {
-            public string Name { get; set; }
-            public int Health { get; set; }
-            public int Attack { get; set; }
-            public int Gold { get; set; }
-            public int Exp { get; set; }
-            public Enemy(string name, int health, int attack, int gold, int exp)
-            {
-                Name = name;
-                Health = health;
-                Attack = attack;
-                Gold = gold;
-                Exp = exp;
-            }
-            public void Damage(int amount)
-            {
-                Health -= amount;
-                if (Health < 0)
-                    Health = 0;
-            }
-        }
 
-        public static Enemy GenerateRandomEnemy() // 랜덤 몬스터 TEST용
+        public Enemy GenerateRandomEnemy()
         {
-            var enemies = new List<(string name, int health, int attack, int gold, int exp)>
+            var enemies = new List<(string name, int id, int lvl, int typeNo, int attack, int def, int health, int gold, int exp)>
             {
-            ("고블린", 20, 10, 10, 2),
-            ("오크", 40, 15, 15, 5),
-            ("스켈레톤", 25, 8, 0, 5),
-            ("패배 테스트용 몬스터", 1000, 1000, 1000, 1000)
+            ("미니언", 1, 2, 0, 5, 5,15,15,10),
+            ("공허충", 1, 3, 0, 9, 5,10,30,15),
+            ("대포미니언", 1, 2, 1, 8, 10,25,100,50),
             };
-
             var randomEnemy = enemies[new Random().Next(0, enemies.Count)];
-            return new Enemy(randomEnemy.name, randomEnemy.health, randomEnemy.attack, randomEnemy.gold, randomEnemy.exp);
+            return new Enemy(randomEnemy.name, randomEnemy.id, randomEnemy.lvl, randomEnemy.typeNo, randomEnemy.attack, randomEnemy.def, randomEnemy.health, randomEnemy.gold, randomEnemy.exp);
         }
+
     }
 }
