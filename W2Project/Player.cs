@@ -141,18 +141,18 @@ namespace W2Project
         public void Damage(int damage)
         {
             fHP -= damage;
-            if(Dead())
+        }
+
+        public bool Dead()
+        {
+            if (fHP <= 0)
             {
                 fLvl--;
                 fGold = fGold / 2;
                 fExp = fExp / 2;
                 fHP = fMaxHP + fBonusHP;
+                return true;
             }
-        }
-
-        public bool Dead()
-        {
-            if (fHP <= 0) return true;
             else return false;
         }
 
