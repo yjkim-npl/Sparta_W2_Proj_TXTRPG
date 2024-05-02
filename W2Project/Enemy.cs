@@ -28,6 +28,7 @@ namespace W2Project
         public int Health { get; set; }
         public int Gold { get; set; }
         public int Exp { get; set; }
+        public bool IsDead { get; private set; } = false;
         public Enemy(string name, int id, int lvl, int enemyType, int attack, int def, int health, int gold, int exp)
         {
             Name = name;
@@ -58,8 +59,15 @@ namespace W2Project
             if (Health < 0)
                 Health = 0;
         }
+        
+        public void Die()
+        {
+            IsDead = true;
+        }
 
     }
+
+
     //class EnemyCsv
     //{
 

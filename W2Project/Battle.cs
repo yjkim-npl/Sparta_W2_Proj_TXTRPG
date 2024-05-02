@@ -95,8 +95,15 @@ namespace W2Project
                     // 몬스터의 턴
                     foreach (var enemy in enemiesList)
                     {
+                        if (enemy.IsDead)
+                        {
+                            // 이미 죽은 몬스터인 경우에는 돈과 경험치를 주지 않음
+                            continue;
+                        }
+
                         if (enemy.Health <= 0)
                         {
+                            enemy.Die();
                             int monsterGoldEarned = enemy.Gold; // 몬스터가 제공하는 골드
                             int monsterExpEarned = enemy.Exp; // 몬스터가 제공하는 경험치
                             totalGoldEarned += monsterGoldEarned; // 플레이어가 얻는 총 골드에 누적
