@@ -37,7 +37,7 @@ namespace W2Project
             fType = (QuestType)type;
             fAchieveGoal = achieveGoal;
             int[] str_sep = fAchieveGoal.Replace('(',' ').Replace(')',' ').Split(':').Select(Int32.Parse).ToArray();
-            if(str_sep.Length > 0 ) // Support quest doesn't have any elements
+            if(fType != QuestType.Support && str_sep.Length > 0 ) // Support quest doesn't have any elements
             {
                 fTargetID = str_sep[0];
                 fCurrNum = str_sep[1];
@@ -217,10 +217,10 @@ namespace W2Project
             switch(fType)
             {
                 case QuestType.Hunt:
-                    suffix = "사냥";
+                    suffix = $"사냥 {fCurrNum} / {fGoalNum}";
                     break;
                 case QuestType.Collect:
-                    suffix = "수집";
+                    suffix = $"수집 {fCurrNum} / {fGoalNum}";
                     break;
                 case QuestType.Support:
                     suffix = "지원";
@@ -237,14 +237,104 @@ namespace W2Project
             fCompleted = true;
             return fReward;
         }
-        enum QuestType
-        {
-            None,
-            Support,
-            Hunt,
-            Collect,
-            Series
-        }
 
+        public int GetDataInt(QuestIdx idx)
+        {
+            int a = 0;
+            switch(idx)
+            {
+                case QuestIdx.ID:
+                    a = fID;
+                    break;
+                case QuestIdx.GoalNum:
+                    a = fGoalNum;
+                    break;
+                case QuestIdx.CurrNum:
+                    a = fCurrNum;
+                    break;
+                case QuestIdx.TargetID:
+                    a = fTargetID;
+                    break;
+                case QuestIdx.Type:
+                    a = (int)fType;
+                    break;
+                case QuestIdx.RewardItemID:
+                    a = fReward.Item1.GetID();
+                    break;
+                case QuestIdx.RewardGold:
+                    a = fReward.Item2;
+                    break;
+                case QuestIdx.RewardExp:
+                    a = fReward.Item3;
+                    break;
+                default:
+                    a = -1;
+                    break;
+
+            }
+            return a;
+        }
+        public string GetDataStr(QuestIdx idx)
+        {
+            string result;
+            switch(idx)
+            {
+                case QuestIdx.Condition:
+                    result = fPreCond;
+                    break;
+                case QuestIdx.Description:
+                    result = fDescription;
+                    break;
+                default:
+                    result = "";
+                    break;
+            }
+            return result;
+        }
+        public bool GetDataBool(QuestIdx idx)
+        {
+            bool result = false;
+            switch(idx)
+            {
+                case QuestIdx.Completed:
+                    result = fCompleted;
+                    break;
+                default:
+                    result = false;
+                    break;
+            }
+            return result;
+        }
     }
+    public enum QuestType
+    {
+        None,
+        Support,
+        Hunt,
+        Collect,
+        Series
+    }
+    public enum QuestStatus
+    {
+        NotAccepted,
+        InProgress,
+        Completed
+    }
+
+    public enum QuestIdx
+    {
+        None,
+        ID,
+        Condition,
+        Description,
+        GoalNum,
+        CurrNum,
+        TargetID,
+        Type,
+        RewardItemID,
+        RewardGold,
+        RewardExp,
+        Completed
+    }
+
 }

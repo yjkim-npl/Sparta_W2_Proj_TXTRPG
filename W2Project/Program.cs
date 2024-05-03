@@ -66,7 +66,47 @@ namespace W2Project
             } while (line != null);
             sr_item.Close();
 
-            Shop shop = new Shop();
+            string str_quest_list = "../../../../Assets/QuestList.csv";
+            quest_list = new List<Quest>();
+            StreamReader sr_Quest = new StreamReader(str_quest_list);
+            line = sr_Quest.ReadLine(); // dummy line
+
+            do
+            {
+                line = sr_Quest.ReadLine();
+                Console.WriteLine(line);
+                if (line != null)
+                {
+                    List<string> comp = line.Split(',').ToList();
+                    if (comp[0] == "#")
+                        continue;
+
+                    QuestType qt;
+                    switch (comp[2])
+                    {
+                        case " Hunt":
+                            qt = QuestType.Hunt;
+                            break;
+                        case " Collect":
+                            qt = QuestType.Collect;
+                            break;
+                        case " Series":
+                            qt = QuestType.Series;
+                            break;
+                        case " Support":
+                            qt = QuestType.Support;
+                            break;
+                        default:
+                            qt = QuestType.None;
+                            break;
+                    }
+                    Quest q = new Quest(int.Parse(comp[0]), comp[1], (int)qt, comp[3], int.Parse(comp[4]), int.Parse(comp[5]), int.Parse(comp[6]), bool.Parse(comp[7]), comp[8]);
+                    quest_list.Add(q);
+                }
+            } while (line != null);
+            sr_Quest.Close();
+
+            Shop shop = new Shop(item_list);
             Scene scene = new Scene();
 
             // Start Scene
@@ -96,7 +136,7 @@ namespace W2Project
                 List<string>items = stats[13].Split(' ').ToList();
                 List<string>equip = stats[14].Split(' ').ToList();
                 List<Item> items_list = new List<Item>();
-                List<bool> equip_list = new List<bool>();
+                List<int> equip_list = new List<int>();
                 for (int a = 0; a < items.Count; a++)
                 {
                     Item item;
@@ -113,10 +153,31 @@ namespace W2Project
                         }
                         items_list.Add(item);
                         if (equip[a] == "1")
-                            equip_list.Add(true);
+                            equip_list.Add(1);
+                        else if (equip[a] == "0")
+                            equip_list.Add(0);
+                        else if (int.TryParse(equip[a],out int num) && item.GetType()==ItemType.Use)
+                        {
+                            equip_list.Add(num);
+                        }
                         else
-                            equip_list.Add(false);
+                        {
+                            equip_list.Add(0);
+                        }
                     }
+                }
+                List<string> lis_quests_status = stats[15].Split(' ').ToList();
+                List<string> lis_quests_ID = stats[16].Split(' ').ToList();
+                List<string> lis_quests_Curr = stats[17].Split(' ').ToList();
+                List<string> lis_quests_Goal = stats[18].Split(' ').ToList();
+                List<(int, int, int, int)> lis_quest_info = new List<(int, int, int, int)>();
+                for( int a=0; a<lis_quests_status.Count; a++)
+                {
+                    int status = int.Parse(lis_quests_status[a]);
+                    int ID = int.Parse(lis_quests_ID[a]);
+                    int Curr = int.Parse(lis_quests_Curr[a]);
+                    int Goal = int.Parse((lis_quests_Goal[a]));
+                    lis_quest_info.Add((status,ID, Curr, Goal));
                 }
                 player = new Player(
                     int.Parse(stats[0]), // lvl
@@ -133,7 +194,8 @@ namespace W2Project
                     int.Parse(stats[11]),// cExp
                     int.Parse(stats[12]),// mExp
                     items_list,
-                    equip_list
+                    equip_list,
+                    lis_quest_info
                     );
                 sr.Close();
             }
@@ -159,9 +221,10 @@ namespace W2Project
 
             // MainScene
             scene.MoveScene(SceneType.Main);
-            int choice = Choice(1, 3);
+            int choice = Choice(1, 6);
             int equip_opt = 0;
             int shop_opt = 0;
+            int quest_opt = 0;
             bool wantSave = false;
             while (isPlaying)
             {
@@ -169,7 +232,7 @@ namespace W2Project
                 {
                     case 0:
                         scene.MoveScene(SceneType.Main);
-                        choice = Choice(0, 5);
+                        choice = Choice(0, 6);
                         if (choice == 0)
                         {
                             scene.MoveScene(SceneType.End);
@@ -231,17 +294,34 @@ namespace W2Project
                         choice = Choice(0, 0);
                         break;
                     case 5:
-                        if (
-                            (Player.instance.GetStatusInt(Player.Status.HP)) +
-                            (Player.instance.GetStatusInt(Player.Status.BHP)) <
-                            100 + 
-                            50*(Player.instance.GetStatusInt(Player.Status.LVL) -1) +
-                                Player.instance.GetStatusInt(Player.Status.BHP)
-                            )
-                        {
-                            Player.instance.FullHealth();
-                        }
+                        Player.instance.UsePotion();
+//                        if (
+//                            (Player.instance.GetStatusInt(Player.Status.HP)) +
+//                            (Player.instance.GetStatusInt(Player.Status.BHP)) <
+//                            100 + 
+//                            50*(Player.instance.GetStatusInt(Player.Status.LVL) -1) +
+//                                Player.instance.GetStatusInt(Player.Status.BHP)
+//                            )
+//                        {
+//                            Player.instance.FullHealth();
+//                        }
                         choice = 0;
+                        break;
+                    case 6:
+                        if(quest_opt == 1)
+                        {
+                            scene.MoveScene(SceneType.Quest, quest_opt);
+                            quest_opt = Choice(0, 9,scene.nQuestsOnPage+1,7);
+                            if (quest_opt == 0)
+                                choice = 0;
+                        }
+                        else
+                        {
+                            scene.MoveScene(SceneType.Quest);
+                            quest_opt = Choice(0, 9,2,7);
+                            if(quest_opt == 0)
+                                choice= 0;
+                        }
                         break;
                     default:
                         scene.MoveScene(SceneType.Main);
@@ -284,11 +364,32 @@ namespace W2Project
                 sw_dat.Write('\n');
                 for(int a=0; a<Player.instance.GetNItems(); a++)
                 {
-                    if (Player.instance.GetEquipStatus(a) == true)
-                        sw_dat.Write("1 ");
-                    else
-                        sw_dat.Write("0 ");
+                    sw_dat.Write("{0} ", Player.instance.GetEquipStatus(a));
                 }
+                List<int> lis_player_quest_status = new List<int>();
+                List<int> lis_player_quest_qID = new List<int>();
+                List<int> lis_player_quest_Curr = new List<int>();
+                List<int> lis_player_quest_Goal = new List<int>();
+                for(int a=0; a<Player.instance.GetNQuestAccepted(); a++)
+                {
+                    (int,int,int,int) q_stat = Player.instance.GetQuestStatusViaIndex(a);
+                    lis_player_quest_status.Add(q_stat.Item1);
+                    lis_player_quest_qID.Add(q_stat.Item2);
+                    lis_player_quest_Curr.Add(q_stat.Item3);
+                    lis_player_quest_Goal.Add(q_stat.Item4);
+                }
+                for(int a=0; a<lis_player_quest_status.Count; a++)
+                    sw_dat.Write(lis_player_quest_status[a]+ " ");
+                sw_dat.Write('\n');
+                for(int a=0; a<lis_player_quest_qID.Count; a++)
+                    sw_dat.Write(lis_player_quest_qID[a]+ " ");
+                sw_dat.Write('\n');
+                for(int a=0; a<lis_player_quest_Curr.Count; a++)
+                    sw_dat.Write(lis_player_quest_Curr[a]+ " ");
+                sw_dat.Write('\n');
+                for(int a=0; a<lis_player_quest_Goal.Count; a++)
+                    sw_dat.Write(lis_player_quest_Goal[a]+ " ");
+                sw_dat.Write('\n');
                 sw_dat.Close();
             }
         }

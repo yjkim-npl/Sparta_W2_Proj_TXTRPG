@@ -55,6 +55,9 @@ namespace W2Project
                 case 3:
                     fType = ItemType.Ring;
                     break;
+                case 4:
+                    fType = ItemType.Use;
+                    break;
                 default:
                     fType = ItemType.None;
                     break;
@@ -89,6 +92,10 @@ namespace W2Project
         public int GetBDef() { return fBDef;}
         public int GetBHP() { return fBHP; }
         public int GetPrice() { return fPrice;}
+
+        public void UseItem()
+        {
+        }
     }
     public enum ItemType
     {

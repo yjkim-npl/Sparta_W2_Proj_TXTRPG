@@ -46,10 +46,11 @@ namespace W2Project
             lis_stock = new List<int>();
             for(int a=0; a<lis_Items.Count; a++)
             {
-                int id = lis_Items[a].GetID();
-                if (id == 0)
-                    continue;
-                lis_stock[id] = 1;
+                lis_stock.Add(1);
+                if (lis_Items[a].GetType() == ItemType.Use)
+                {
+                    lis_stock[a] += 9;
+                }
             }
         }
         public int GetNItem()
