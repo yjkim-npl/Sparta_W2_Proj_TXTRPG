@@ -91,7 +91,7 @@ namespace W2Project
                         }
 
                         Console.SetCursorPosition(5, 22); Console.WriteLine("                               ");
-                        int playerDamage = CriticalAttackDamage();
+                        int playerDamage = AttackDamage();
                         int enemyHealthBeforeAttack = enemy.Health; // 몬스터 공격 받기 전 체력
                         enemy.Damage(playerDamage);
                         int enemyHealthAfterAttack = enemy.Health; // 몬스터 공격 받은 후 체력
@@ -262,10 +262,12 @@ namespace W2Project
             Console.SetCursorPosition(7, 13); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
         }
 
-        public int CriticalAttackDamage()
+        public int AttackDamage()
         {
             int baseDamage = Player.instance.GetStatusInt(Status.ATK);
             bool isCritical = IsCriticalHit();
+            bool isAvoid = IsAvoid();
+
             if (IsCriticalHit())
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -273,6 +275,15 @@ namespace W2Project
                 baseDamage = (int)Math.Round(baseDamage * 1.6); // 치명타가 발생하면 공격력을 1.6 배로 증가
                 Console.ResetColor();
             }
+
+            if (isAvoid)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.SetCursorPosition(40, 12); Console.WriteLine("회피!       ");
+                Console.ResetColor();
+                return 0; // 회피 성공 시 피해 없음
+            }
+
             return baseDamage;
         }
 
@@ -280,6 +291,11 @@ namespace W2Project
         {
             int criticalChance = 15; // 15%
             return random.Next(100) < criticalChance;
+        }
+        private bool IsAvoid() // 회피 확률 설정
+        {
+            int avoidChance = 10; // 10%
+            return random.Next(100) < avoidChance;
         }
 
         public void monsterHuntList()
