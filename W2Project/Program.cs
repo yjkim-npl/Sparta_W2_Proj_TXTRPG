@@ -141,16 +141,71 @@ namespace W2Project
             }
 
             scene.MoveScene(SceneType.Jobs);
-            string jobs = Console.ReadLine();
-            if (int.Parse(jobs) == 1)
+            string jobChoiceString = Console.ReadLine();
+
+            //switch(int.Parse(jobChoiceString))
+            //{
+            //    case 1:
+            //        Player.instance.Warrior();
+            //        break;
+            //    case 2:
+            //        Player.instance.Archer();
+            //        break;
+            //    case 3:
+            //        Player.instance.Chief();
+            //        break;
+            //}
+
+            //bool resJobChoice = int.TryParse(jobChoiceString, out int jobChoice);
+
+            //while(true)
+            //{
+            //    if (jobChoice < 1 || jobChoice > 3)
+            //    {
+            //        Console.WriteLine("잘못된 선택입니다. 다시 선택해주세요.");
+            //        string jobChoiceString2 = Console.ReadLine();
+            //        int.Parse (jobChoiceString2);
+            //        if (jobChoice == 1)
+            //        {
+            //            Player.instance.Warrior();
+            //        }
+            //        else if (jobChoice == 2)
+            //        {
+            //            Player.instance.Archer();
+            //        }
+            //        else if (jobChoice == 3)
+            //        {
+            //            Player.instance.Chief();
+            //        }
+            //    }
+            //}
+            //if (int.TryParse(jobChoiceString, out int jobChoice))
+            //{
+            //    switch (jobChoice)
+            //    {
+            //        case 1:
+            //            Player.instance.Warrior();
+            //            break;
+            //        case 2:
+            //            Player.instance.Archer();
+            //            break;
+            //        case 3:
+            //            Player.instance.Chief();
+            //            break;
+            //        default:
+            //            Console.WriteLine("잘못된 선택입니다. 다시 선택해주세요.");
+            //            break;
+            //    }
+            //}
+            if (int.Parse(jobChoiceString) == 1)
             {
                 Player.instance.Warrior();
             }
-            else if (int.Parse(jobs) == 2)
+            else if (int.Parse(jobChoiceString) == 2)
             {
                 Player.instance.Archer();
             }
-            else if (int.Parse(jobs) == 3)
+            else if (int.Parse(jobChoiceString) == 3)
             {
                 Player.instance.Chief();
             }
