@@ -165,6 +165,10 @@ namespace W2Project
                 }
                 else if (input == "0")
                 {
+                    DungeonManager.Instance.Type0 = false;
+                    DungeonManager.Instance.Type1 = false;
+                    DungeonManager.Instance.Type2 = false;
+
                     BaseScene();
                     Console.SetCursorPosition(5, 5); Console.WriteLine("당신은 도망쳤다!");
                     return;
