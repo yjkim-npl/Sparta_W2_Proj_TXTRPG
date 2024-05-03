@@ -18,8 +18,6 @@ namespace W2Project
         int fBonusDef;
         int fHP;
         int fMaxHP;
-        int fMP;
-        int fMaxMP;
         int fBonusHP;
         int fGold;
         int fExp;
@@ -47,8 +45,6 @@ namespace W2Project
             fHP = 100;
             fMaxHP = 100;
             fBonusHP = 0;
-            fMP = 500;
-            fMaxMP = 500;
             fGold = 11200;
             fExp = 0;
             fMaxExp = 10;
@@ -59,7 +55,7 @@ namespace W2Project
             fRingLvl = 0;
         }
 
-        public Player(int lvl, string name, string job, int atk, int batk, int def, int bdef, int HP, int MHP, int MP, int MMP, int bHP, int gold, int exp, int mexp, List<Item> items, List<bool> equips)
+        public Player(int lvl, string name, string job, int atk, int batk, int def, int bdef, int HP, int MHP, int bHP, int gold, int exp, int mexp, List<Item> items, List<bool> equips)
         {
             if (instance == null)
                 instance = this;
@@ -72,8 +68,6 @@ namespace W2Project
             fBonusDef = bdef;
             fHP = HP;
             fMaxHP = MHP;
-            fMP = MP;
-            fMaxMP = MMP;
             fBonusHP = bHP;
             fGold = gold;
             fExp = exp;
