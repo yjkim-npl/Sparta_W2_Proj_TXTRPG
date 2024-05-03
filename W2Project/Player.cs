@@ -29,7 +29,15 @@ namespace W2Project
 
         // hope to be use vector<pair(Item,bool)>...
         List<Item> lis_items;
-        List<bool> lis_equips;
+        List<int> lis_equips; // for potion, the equip number means the number of potion
+
+        List<(int status,int questID,int curr,int goal)> lis_quest; // quest status : 0. not accepted, 1. ongoing, 2. completed
+        /* samples for lis_quest
+         * 0, 1, 2 (status)
+         * 0, 1, 3 (Quest ID)
+         * 0, 0, 0 (current status)
+         * 0, 1, 3 (goals)
+         */
 
         public Player(string in_name) // initial setting for player when this class was constructed
         {
@@ -48,14 +56,15 @@ namespace W2Project
             fGold = 11200;
             fExp = 0;
             fMaxExp = 10;
-            lis_items = new List<Item>();
-            lis_equips = new List<bool>();
             fWeaponLvl = 0;
             fArmorLvl = 0;
             fRingLvl = 0;
+            lis_items = new List<Item>();
+            lis_equips = new List<int>();
+            lis_quest = new List<(int,int,int,int)>(); 
         }
 
-        public Player(int lvl, string name, string job, int atk, int batk, int def, int bdef, int HP, int MHP, int bHP, int gold, int exp, int mexp, List<Item> items, List<bool> equips)
+        public Player(int lvl, string name, string job, int atk, int batk, int def, int bdef, int HP, int MHP, int bHP, int gold, int exp, int mexp, List<Item> items, List<int> equips,List<(int,int,int,int)> quest)
         {
             if (instance == null)
                 instance = this;
@@ -76,7 +85,7 @@ namespace W2Project
             lis_equips = equips;
             for (int a = 0; a < lis_items.Count; a++)
             {
-                if (!lis_equips[a]) continue;
+                if (lis_equips[a] != 1) continue;
                 if (lis_items[a].GetBAtk() > 0 && (fWeaponLvl & lis_items[a].GetHierachy()) != lis_items[a].GetHierachy())
                     fWeaponLvl += lis_items[a].GetHierachy();
                 if (lis_items[a].GetBDef() > 0 && (fArmorLvl & lis_items[a].GetHierachy()) != lis_items[a].GetHierachy())
@@ -84,6 +93,7 @@ namespace W2Project
                 if (lis_items[a].GetBHP() > 0 && (fRingLvl & lis_items[a].GetHierachy()) != lis_items[a].GetHierachy())
                     fRingLvl += lis_items[a].GetHierachy();
             }
+            lis_quest = quest;
         }
 
         public void Warrior()
@@ -221,6 +231,45 @@ namespace W2Project
         {
             return lis_items[idx];
         }
+        public void UsePotion()
+        {
+            int idx = 0;
+            foreach (Item item in lis_items)
+            {
+                if( item.GetType() == ItemType.Use)
+                {
+                    idx = lis_items.IndexOf(item);
+                    break;
+                }
+            }
+
+            if (lis_equips[idx] > 0)
+            {
+                lis_equips[idx]--;
+                fHP += lis_items[idx].GetBHP();
+                if(fHP > fMaxHP + fBonusHP)
+                    fHP = fMaxHP + fBonusHP;
+            }
+        }
+        public int GetNumberOfPotion()
+        {
+            int idx = 0;
+            int num = 0;
+            foreach (Item item in lis_items)
+            {
+                if( item.GetType() == ItemType.Use)
+                {
+                    idx = lis_items.IndexOf(item);
+                    break;
+                }
+            }
+
+            if (lis_equips[idx] > 0)
+            {
+                num = lis_equips[idx];
+            }
+            return num;
+        }
         public int GetHierachyLvl(Hierachy hier)
         {
             switch(hier)
@@ -239,16 +288,16 @@ namespace W2Project
                     break;
             }
         }
-        public bool GetEquipStatus(int idx)
+        public int GetEquipStatus(int idx)
         {
             return lis_equips[idx];
         }
 
         public void Equip(int idx)
         {
-            if (!lis_equips[idx])
+            if (lis_equips[idx] == 0)
             {
-                lis_equips[idx] = true;
+                lis_equips[idx] = 1;
                 fBonusAtk += lis_items[idx].GetBAtk();
                 fBonusDef += lis_items[idx].GetBDef();
                 fBonusHP += lis_items[idx].GetBHP();
@@ -271,9 +320,9 @@ namespace W2Project
         }
         public void UpEquip(int idx)
         {
-            if (lis_equips[idx])
+            if (lis_equips[idx] == 1)
             {
-                lis_equips[idx] = false;
+                lis_equips[idx] = 0;
                 fBonusAtk -= lis_items[idx].GetBAtk();
                 fBonusDef -= lis_items[idx].GetBDef();
                 fBonusHP -= lis_items[idx].GetBHP();
@@ -297,8 +346,81 @@ namespace W2Project
         public void BuyItem(Item item)
         {
             lis_items.Add(item);
-            lis_equips.Add(false);
+            if(item.GetType() == ItemType.Use)
+            {
+                if (lis_items.Count > lis_equips.Count)
+                    lis_equips.Add(1);
+                else
+                {
+                    int idx = lis_items.IndexOf(item);
+                    lis_equips[idx]++;
+                }
+            }
+            else
+            {
+                lis_equips.Add(0);
+            }
             fGold -= item.GetPrice();
+        }
+
+        public int GetNQuestAccepted()
+        {
+            return lis_quest.Count;
+        }
+        public (int,int,int,int) GetQuestStatusViaQID(int q_ID)
+        {
+            foreach(var  item in lis_quest) 
+            {
+                if(item.questID == q_ID)
+                {
+                    return (item.status, q_ID, item.curr, item.goal);
+                }
+            }
+            return (0,0,0,0);
+        }
+        public (int,int,int,int) GetQuestStatusViaIndex(int idx)
+        {
+            return lis_quest[idx];
+        }
+        public bool AcceptQuest(int q_ID)
+        {
+            Quest quest = Program.quest_list[q_ID];
+            if (quest.IsAcceptable(this))
+            {
+                int cur_quests = 0;
+                for(int a=0; a<lis_quest.Count; a++)
+                {
+                    if (lis_quest[a].status == 1)
+                        cur_quests++;
+                }
+                if(cur_quests > 3)
+                {
+                    return false;
+                }
+                else
+                {
+                    lis_quest.Add((1,q_ID,quest.GetDataInt(QuestIdx.CurrNum),quest.GetDataInt(QuestIdx.GoalNum)));
+                    return true;
+                }
+            }
+            else
+                return false;
+        }
+
+        public bool CompleteQuest(int q_ID)
+        {
+            for(int a=0; a<lis_quest.Count; a++)
+            {
+                if (lis_quest[a].questID == q_ID)
+                {
+                    if (lis_quest[a].curr >= lis_quest[a].goal)
+                    {
+                        lis_quest[a] = (2,q_ID, 0,0);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public enum Status

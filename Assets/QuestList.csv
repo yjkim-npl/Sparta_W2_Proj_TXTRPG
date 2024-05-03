@@ -1,0 +1,6 @@
+ID, preCond, type, achieveGoal, itemID, rwd_gold, rwd_exp, achieve, desc
+#,  (<cond>), type,  (ID of mob,item : current : goal)
+0, (LVL < 3), Hunt, (1:0:5), 6, 30, 30, false, 사냥 입문자를 위한 기초 퀘스트
+1, (LVL >= 4), Hunt, (3:0:5), 6, 30, 30, false, 사냥 숙련자를 위한 보스 토벌 퀘스트
+2, (LVL >= 3), Collect, (3:0:1), 4, 30, 30, false, 부자를 위한 수집 퀘스트
+3, (LVL < 5), Support, (0), 0, 50, 50, false, 장비 슬룻 추가 기념 지원 퀘스트
