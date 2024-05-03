@@ -22,27 +22,37 @@ namespace W2Project
         public string Name { get; set; }
         public int ID { get; set; }
         public int Lvl { get; set; }
-        public EnemyType Type { get; set; }
+        public int Type { get; set; }
         public int Attack { get; set; }
         public int Def { get; set; }
         public int Health { get; set; }
         public int Gold { get; set; }
         public int Exp { get; set; }
         public bool IsDead { get; private set; } = false;
-
-        public Enemy(string name, int id, int lvl, EnemyType type, int attack, int def, int health, int gold, int exp)
+        public Enemy(string name, int id, int lvl, int enemyType, int attack, int def, int health, int gold, int exp)
         {
             Name = name;
             ID = id;
             Lvl = lvl;
-            Type = type;
+            Type = enemyType;
+            //switch (enemyType)
+            //{
+            //    case 0:
+            //        Type = EnemyType.None;
+            //        break;
+            //    case 1:
+            //        Type = EnemyType.Mob;
+            //        break;
+            //    case 2:
+            //        Type = EnemyType.Boss;
+            //        break;
+            //}
             Attack = attack;
             Def = def;
             Health = health;
             Gold = gold;
             Exp = exp;
         }
-
         public void Damage(int amount)
         {
             Health -= amount;
@@ -56,47 +66,71 @@ namespace W2Project
         }
     }
 
-    public class EnemyCsv
-    {
-        List<Enemy> enemiesList = EnemyCsv.LoadEnemiesFromCsv("../../../../Assets/EnemyList.csv");
-        public static List<Enemy> LoadEnemiesFromCsv(string filePath)
+    class EnemyManager
+    { 
+        private List<Enemy> type0Enemies;
+        private List<Enemy> type1Enemies;
+        private List<Enemy> type2Enemies;
+        // 필요에 따라 다른 타입의 리스트 추가 가능
+
+        public EnemyManager()
         {
-            List<Enemy> enemiesList = new List<Enemy>();
+            type0Enemies = new List<Enemy>();
+            type1Enemies = new List<Enemy>();
+            type2Enemies = new List<Enemy>();
 
-            using (StreamReader sr = new StreamReader(filePath))
+            // 필요한 초기화 작업 수행 
+            //(string name, int id, int lvl, int enemyType, int attack, int def, int health, int gold, int exp)
+
+            type0Enemies.Add(new Enemy("Test1", 1, 1, 0, 10, 5, 20, 5, 10));
+            type0Enemies.Add(new Enemy("Test2", 2, 1, 0, 12, 6, 22, 7, 12));
+            type0Enemies.Add(new Enemy("Test3", 3, 2, 0, 15, 8, 30, 10, 15));
+
+            type1Enemies.Add(new Enemy("Test mob1", 4, 2, 1, 15, 8, 30, 10, 15));
+            type1Enemies.Add(new Enemy("Test mob2", 5, 2, 1, 18, 10, 35, 12, 20));
+            type1Enemies.Add(new Enemy("Test mob3", 6, 3, 1, 30, 15, 100, 50, 100));
+
+            type2Enemies.Add(new Enemy("Test boss1", 7, 3, 2, 30, 15, 100, 50, 100));
+            type2Enemies.Add(new Enemy("Test boss2", 8, 3, 2, 35, 18, 120, 60, 120));
+            type2Enemies.Add(new Enemy("Test boss3", 9, 4, 2, 40, 20, 140, 70, 140));
+        }
+
+        public Enemy TypeEnemy(int type)
+        {
+            Random random = new Random();
+            List<Enemy> selectedEnemies = GetEnemyListByType(type);
+            if (selectedEnemies.Count == 0)
             {
-                sr.ReadLine();
-
-                while (!sr.EndOfStream)
-                {
-                    string line = sr.ReadLine();
-                    string[] fields = line.Split(',');
-
-                    string name = fields[1];
-                    int id = int.Parse(fields[2]);
-                    int lvl = int.Parse(fields[3]);
-                    EnemyType type = (EnemyType)Enum.Parse(typeof(EnemyType), fields[4]);
-                    int attack = int.Parse(fields[5]);
-                    int def = int.Parse(fields[6]);
-                    int health = int.Parse(fields[7]);
-                    int gold = int.Parse(fields[8]);
-                    int exp = int.Parse(fields[9]);
-
-                    // 몬스터 객체를 생성하여 리스트에 추가합니다.
-                    Enemy enemy = new Enemy(name, id, lvl, type, attack, def, health, gold, exp);
-                    enemiesList.Add(enemy);
-                }
+                throw new ArgumentException("해당 타입의 몬스터가 없습니다.");
             }
 
-            return enemiesList;
+            int randomIndex = random.Next(0, selectedEnemies.Count);
+
+            Enemy selectedEnemy = selectedEnemies[randomIndex];
+            return new Enemy(selectedEnemy.Name, selectedEnemy.ID, selectedEnemy.Lvl, selectedEnemy.Type, selectedEnemy.Attack, selectedEnemy.Def, selectedEnemy.Health, selectedEnemy.Gold, selectedEnemy.Exp);
+        }
+
+        private List<Enemy> GetEnemyListByType(int type)
+        {
+            switch (type)
+            {
+                case 0:
+                    return type0Enemies;
+                case 1:
+                    return type1Enemies;
+                case 2:
+                    return type2Enemies;
+                // 다른 타입에 대한 처리 추가 가능
+                default:
+                    throw new ArgumentException("잘못된 적 유형입니다.");
+            }
         }
     }
-
-
-    public enum EnemyType
-    {
-        Mob,
-        Boss,
-        None
-    }
 }
+public enum EnemyType
+        {
+            Mob,
+            Boss,
+            None
+        }
+    
