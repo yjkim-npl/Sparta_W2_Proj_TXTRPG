@@ -32,11 +32,11 @@ namespace W2Project
                     break;
                 case SceneType.Jobs:
                     Console.SetCursorPosition(0, 10);
-                    Console.WriteLine("플레이어의 직업을 선택해주세요.");
-                    Console.SetCursorPosition(2, 12); Console.WriteLine("1. 전사");
-                    Console.SetCursorPosition(12, 12); Console.WriteLine("2. 궁수");
-                    Console.SetCursorPosition(22, 12); Console.WriteLine("3. 도적");
-                    Console.SetCursorPosition(0, 14); Console.Write(">>");
+                    Console.SetCursorPosition(29, 10); Console.WriteLine("플레이어의 직업을 선택해주세요.");
+                    Console.SetCursorPosition(21, 12); Console.WriteLine("1. 전사 -> 체력 +100, 방어력 +3");
+                    Console.SetCursorPosition(21, 13); Console.WriteLine("2. 궁수 -> 공격력 +5, 체력 -40, 방어력 -3");
+                    Console.SetCursorPosition(21, 14); Console.WriteLine("3. 도적 -> 공격력 +3, 체력 -20, 방어력 -2");
+                    Console.SetCursorPosition(0, 16); Console.Write(">>");
                     break;
                 case SceneType.Main:
                     Console.SetCursorPosition(5, 3);

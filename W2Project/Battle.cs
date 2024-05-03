@@ -166,6 +166,16 @@ namespace W2Project
                     }
 
                 }
+                else if (input == "2") 
+                {
+                    Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-45}", " ");
+                    Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-45}", " ");
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("{0,-45}", "몬스터 번호를 입력하세요. ");
+                    Console.SetCursorPosition(5, 23); Console.Write(">>     ");
+                    Console.SetCursorPosition(40, 12); Console.Write("             ");
+                    Console.SetCursorPosition(8, 23);
+                }
+
                 else if (input == "0")
                 {
                     DungeonManager.Instance.Type0 = false;
@@ -203,9 +213,10 @@ namespace W2Project
             Console.SetCursorPosition(5, 17);
             Console.WriteLine("{0,-60}", $"현재 체력 : {Player.instance.GetStatusInt(Player.Status.HP)}");
             Console.SetCursorPosition(5, 19); Console.WriteLine("1. 몬스터 공격");
-            Console.SetCursorPosition(5, 20); Console.WriteLine("0. 도망");
-            Console.SetCursorPosition(5, 23); Console.Write(">>      ");
-            Console.SetCursorPosition(8, 23);
+            Console.SetCursorPosition(5, 20); Console.WriteLine("2. 스킬 공격");
+            Console.SetCursorPosition(5, 21); Console.WriteLine("0. 도망");
+            Console.SetCursorPosition(5, 24); Console.Write(">>      ");
+            Console.SetCursorPosition(8, 24);
         }
 
         public void BattleClearResult() // 승리 메소드
