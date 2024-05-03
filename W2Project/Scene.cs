@@ -399,8 +399,8 @@ namespace W2Project
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     Console.WriteLine("[던전]");
                     Console.ResetColor();
-                    Battle battle = new Battle();
-                    battle.BattlePhase();
+                    DungeonManager dungeonManager = DungeonManager.Instance;
+                    dungeonManager.DungeonPhase();
                     //Console.SetCursorPosition(5, 4); Console.WriteLine("몬스터를 처치하여 경험치와 재화를 얻을 수 있습니다.");
                     //Console.SetCursorPosition(5, 5); Console.WriteLine("전투 시스템 미구현");
                     //Console.SetCursorPosition(7, 7);

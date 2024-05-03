@@ -15,13 +15,16 @@ namespace W2Project
 {
     internal class Battle
     {
-        Player player = Player.instance; // 플레이어 인스턴스
+
         private Random random = new Random(); // 랜덤 몬스터
         private List<Enemy> enemiesList; // 리스트 불러오기 
         private const int MIN_MONSTERS = 1; // 몬스터 최소 1마리
         private const int MAX_MONSTERS = 3; // 몬스터 최대 3마리
         private int totalGoldEarned = 0; // 플레이어가 얻는 총 골드
         private int totalExpEarned = 0; // 플레이어가 얻는 총 경험치
+        
+   
+        EnemyManager enemyList = new EnemyManager();
 
         public void BattlePhase()
         {
@@ -31,15 +34,25 @@ namespace W2Project
             bool continueEncounter = true; // 전투 지속 여부
             enemiesList = new List<Enemy>(); // 리스트 초기화
 
+            DungeonManager dungeonManager = DungeonManager.Instance;
+
             int numMonsters = random.Next(MIN_MONSTERS, MAX_MONSTERS + 1); // 전투가 시작될 때 몬스터 최소 최대 수 생성
 
             for (int i = 0; i < numMonsters; i++)
             {
-                Enemy enemy = GenerateRandomEnemy();
-                enemiesList.Add(enemy);
+                int enemyType = dungeonManager.Type0 ? 0 : dungeonManager.Type1 ? 1 : dungeonManager.Type2 ? 2 : -1;
+                if (enemyType != -1)
+                {
+                    Enemy enemy = enemyList.TypeEnemy(enemyType);
+                    enemiesList.Add(enemy);
+                }
+                else
+                {
+                    Console.SetCursorPosition(5, 19); Console.WriteLine("버그 발생");
+                }
             }
 
-            while (!player.Dead() && continueEncounter) // 플레이어가 죽지 않았고, 전투가 지속중일 때,
+            while (!Player.instance.Dead() && continueEncounter) // 플레이어가 죽지 않았고, 전투가 지속중일 때,
             {
 
                 BaseBattleScene(); // 기본 배틀 UI 양식 불러오기
@@ -190,8 +203,13 @@ namespace W2Project
 
         public void BattleClearResult() // 승리 메소드
         {
+
             Console.Clear();
             BaseScene();
+
+            DungeonManager.Instance.Type0 = false;
+            DungeonManager.Instance.Type1 = false;
+            DungeonManager.Instance.Type2 = false;
 
             Console.SetCursorPosition(5, 3);
             Console.ForegroundColor = ConsoleColor.DarkBlue;
@@ -216,6 +234,10 @@ namespace W2Project
         {
             Console.Clear();
             BaseScene();
+
+            DungeonManager.Instance.Type0 = false;
+            DungeonManager.Instance.Type1 = false;
+            DungeonManager.Instance.Type2 = false;
 
             Console.SetCursorPosition(5, 3);
             Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -266,18 +288,5 @@ namespace W2Project
                 Console.WriteLine("{0,-60}", $"몬스터 {j + 1}: {(enemy.Health > 0 ? enemy.Name : "DEAD")}, 체력: {enemy.Health}");
             }
         }
-
-        public Enemy GenerateRandomEnemy()
-        {
-            var enemies = new List<(string name, int id, int lvl, int typeNo, int attack, int def, int health, int gold, int exp)>
-            {
-            ("미니언", 1, 2, 0, 5, 5,15,15,10),
-            ("공허충", 1, 3, 0, 9, 5,10,30,15),
-            ("대포미니언", 1, 2, 1, 8, 10,25,100,50),
-            };
-            var randomEnemy = enemies[new Random().Next(0, enemies.Count)];
-            return new Enemy(randomEnemy.name, randomEnemy.id, randomEnemy.lvl, randomEnemy.typeNo, randomEnemy.attack, randomEnemy.def, randomEnemy.health, randomEnemy.gold, randomEnemy.exp);
-        }
-
     }
 }
