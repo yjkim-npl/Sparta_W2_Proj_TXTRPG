@@ -91,7 +91,7 @@ namespace W2Project
                         }
 
                         Console.SetCursorPosition(5, 22); Console.WriteLine("                               ");
-                        int playerDamage = CriticalAttackDamage();
+                        int playerDamage = AttackDamage();
                         int enemyHealthBeforeAttack = enemy.Health; // 몬스터 공격 받기 전 체력
                         enemy.Damage(playerDamage);
                         int enemyHealthAfterAttack = enemy.Health; // 몬스터 공격 받은 후 체력
@@ -159,6 +159,9 @@ namespace W2Project
                     {
                         Console.WriteLine("전투에서 승리하였습니다!");
                         BattleClearResult();
+                        Thread.Sleep(3000);
+                        dungeonManager.DungeonResult();
+                        Thread.Sleep(3000);
                         return;
                     }
 
@@ -222,10 +225,6 @@ namespace W2Project
             Console.Clear();
             BaseScene();
 
-            DungeonManager.Instance.Type0 = false;
-            DungeonManager.Instance.Type1 = false;
-            DungeonManager.Instance.Type2 = false;
-
             Console.SetCursorPosition(5, 3);
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("[배틀 결과]");
@@ -242,7 +241,7 @@ namespace W2Project
             Player.instance.AddExp(totalExpEarned); // 플레이어에게 총 경험치 적용
             int playerAfterLVL = Player.instance.GetStatusInt(Player.Status.LVL); //플레이어 획득 후 레벨
             int playerAfterEXP = Player.instance.GetStatusInt(Player.Status.EXP); //플레이어 획득 전 경험치
-            Console.SetCursorPosition(7, 13); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
+            Console.SetCursorPosition(7, 14); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
         }
 
         public void BattleFailureResult() // 패배 메소드
@@ -270,13 +269,15 @@ namespace W2Project
 
             int playerAfterLVL = Player.instance.GetStatusInt(Player.Status.LVL); //플레이어 획득 후 레벨
             int playerAfterEXP = Player.instance.GetStatusInt(Player.Status.EXP); //플레이어 획득 전 경험치
-            Console.SetCursorPosition(7, 13); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
+            Console.SetCursorPosition(7, 14); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
         }
 
-        public int CriticalAttackDamage()
+        public int AttackDamage()
         {
             int baseDamage = Player.instance.GetStatusInt(Status.ATK);
             bool isCritical = IsCriticalHit();
+            bool isAvoid = IsAvoid();
+
             if (IsCriticalHit())
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -284,6 +285,15 @@ namespace W2Project
                 baseDamage = (int)Math.Round(baseDamage * 1.6); // 치명타가 발생하면 공격력을 1.6 배로 증가
                 Console.ResetColor();
             }
+
+            if (isAvoid)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.SetCursorPosition(40, 12); Console.WriteLine("회피!       ");
+                Console.ResetColor();
+                return 0; // 회피 성공 시 피해 없음
+            }
+
             return baseDamage;
         }
 
@@ -291,6 +301,11 @@ namespace W2Project
         {
             int criticalChance = 15; // 15%
             return random.Next(100) < criticalChance;
+        }
+        private bool IsAvoid() // 회피 확률 설정
+        {
+            int avoidChance = 10; // 10%
+            return random.Next(100) < avoidChance;
         }
 
         public void monsterHuntList()
