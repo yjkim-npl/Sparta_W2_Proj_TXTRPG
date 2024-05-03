@@ -159,6 +159,9 @@ namespace W2Project
                     {
                         Console.WriteLine("전투에서 승리하였습니다!");
                         BattleClearResult();
+                        Thread.Sleep(3000);
+                        dungeonManager.DungeonResult();
+                        Thread.Sleep(3000);
                         return;
                     }
 
@@ -211,10 +214,6 @@ namespace W2Project
             Console.Clear();
             BaseScene();
 
-            DungeonManager.Instance.Type0 = false;
-            DungeonManager.Instance.Type1 = false;
-            DungeonManager.Instance.Type2 = false;
-
             Console.SetCursorPosition(5, 3);
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("[배틀 결과]");
@@ -231,7 +230,7 @@ namespace W2Project
             Player.instance.AddExp(totalExpEarned); // 플레이어에게 총 경험치 적용
             int playerAfterLVL = Player.instance.GetStatusInt(Player.Status.LVL); //플레이어 획득 후 레벨
             int playerAfterEXP = Player.instance.GetStatusInt(Player.Status.EXP); //플레이어 획득 전 경험치
-            Console.SetCursorPosition(7, 13); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
+            Console.SetCursorPosition(7, 14); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
         }
 
         public void BattleFailureResult() // 패배 메소드
@@ -259,7 +258,7 @@ namespace W2Project
 
             int playerAfterLVL = Player.instance.GetStatusInt(Player.Status.LVL); //플레이어 획득 후 레벨
             int playerAfterEXP = Player.instance.GetStatusInt(Player.Status.EXP); //플레이어 획득 전 경험치
-            Console.SetCursorPosition(7, 13); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
+            Console.SetCursorPosition(7, 14); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
         }
 
         public int AttackDamage()
