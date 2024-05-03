@@ -29,10 +29,10 @@ namespace W2Project
             Console.SetCursorPosition(5, 5); Console.WriteLine("몬스터 무리가 나타났다!");
 
             bool continueEncounter = true; // 전투 지속 여부
-            enemiesList = new List<Enemy>(); // 리스트 초기화
+            enemiesList = new List<Enemy>();
+            enemiesList = EnemyCsv.LoadEnemiesFromCsv("../../../../Assets/EnemyList.csv");
 
             int numMonsters = random.Next(MIN_MONSTERS, MAX_MONSTERS + 1); // 전투가 시작될 때 몬스터 최소 최대 수 생성
-
             for (int i = 0; i < numMonsters; i++)
             {
                 Enemy enemy = GenerateRandomEnemy();
@@ -266,18 +266,13 @@ namespace W2Project
                 Console.WriteLine("{0,-60}", $"몬스터 {j + 1}: {(enemy.Health > 0 ? enemy.Name : "DEAD")}, 체력: {enemy.Health}");
             }
         }
-
         public Enemy GenerateRandomEnemy()
-        {
-            var enemies = new List<(string name, int id, int lvl, int typeNo, int attack, int def, int health, int gold, int exp)>
-            {
-            ("미니언", 1, 2, 0, 5, 5,15,15,10),
-            ("공허충", 1, 3, 0, 9, 5,10,30,15),
-            ("대포미니언", 1, 2, 1, 8, 10,25,100,50),
-            };
-            var randomEnemy = enemies[new Random().Next(0, enemies.Count)];
-            return new Enemy(randomEnemy.name, randomEnemy.id, randomEnemy.lvl, randomEnemy.typeNo, randomEnemy.attack, randomEnemy.def, randomEnemy.health, randomEnemy.gold, randomEnemy.exp);
+        {                 
+            var randomEnemy = enemiesList[new Random().Next(0, enemiesList.Count)];
+            return new Enemy(randomEnemy.Name, randomEnemy.ID, randomEnemy.Lvl, randomEnemy.Type, randomEnemy.Attack, randomEnemy.Def, randomEnemy.Health, randomEnemy.Gold, randomEnemy.Exp);
         }
+    
+
 
     }
 }
