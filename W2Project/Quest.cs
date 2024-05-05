@@ -44,7 +44,7 @@ namespace W2Project
                 fGoalNum = str_sep[2];
             }
             fDescription = desc;
-            fReward = (Program.item_list[itemID], rwd_gold, rwd_exp);
+            fReward = (Program.item_list[itemID-1], rwd_gold, rwd_exp);
             fCompleted = completed;
         }
         public bool IsAcceptable(Player player)

@@ -52,7 +52,7 @@ namespace W2Project
                     Console.SetCursorPosition(7, 8);  Console.WriteLine("2. 인벤토리");
                     Console.SetCursorPosition(7, 9);  Console.WriteLine("3. 상점");
                     Console.SetCursorPosition(7, 10); Console.WriteLine("4. 던전");
-                    Console.SetCursorPosition(7, 11); Console.WriteLine("5. 휴식");
+                    Console.SetCursorPosition(7, 11); Console.WriteLine("5. 휴식 및 강화");
                     Console.SetCursorPosition(7, 12); Console.WriteLine("6. 퀘스트 게시판");
                     Console.SetCursorPosition(7, 14); Console.WriteLine("0. 게임 종료");
                     Console.SetCursorPosition(5, 22); Console.WriteLine("원하시는 행동을 입력해주세요");
@@ -169,7 +169,7 @@ namespace W2Project
                         Console.SetCursorPosition(15, 8 + a); 
                         if(item.GetType() == ItemType.Use)
                         {
-                            Console.WriteLine(item.GetName()+ " ({0})",Player.instance.GetNumberOfPotion());
+                            Console.WriteLine(item.GetName()+ " ({0})",Player.instance.GetNumberOfPotion(item.GetBHP()>0?0:item.GetBAtk()>0?1:item.GetBDef()>0?2:-1));
                         }
                         else
                         {
@@ -225,6 +225,14 @@ namespace W2Project
                             Console.SetCursorPosition(51, 8 + a); Console.WriteLine(item.GetBDef().ToString());
                             Console.SetCursorPosition(53, 8 + a); Console.WriteLine("|");
                             Console.SetCursorPosition(55, 8 + a);
+                        }
+                        if(item.GetBHP() != 0)
+                        {
+                            Console.SetCursorPosition(39, 8 + a); Console.WriteLine("| H   P +");
+                            Console.SetCursorPosition(51, 8 + a); Console.WriteLine(item.GetBHP().ToString());
+                            Console.SetCursorPosition(53, 8 + a); Console.WriteLine("|");
+                            Console.SetCursorPosition(55, 8 + a);
+
                         }
                         if(item.GetBDef() == 0 && item.GetBAtk() == 0)
                         {
@@ -338,28 +346,26 @@ namespace W2Project
                         Console.SetCursorPosition(7, 10+a);
                         Console.WriteLine("- ");
                         Console.SetCursorPosition(10, 10 + a);
-                        if(item.GetType() == ItemType.Use)
-                        {
-                            Console.WriteLine(item.GetName()+ " ({0})",Shop.instance.GetStock(nItemsOnPage*curPageShop+a));
-                        }
-                        else
-                        {
-                            Console.WriteLine(item.GetName());
-                        }
+                        Console.WriteLine(item.GetName()+ " ({0})  ",Shop.instance.GetStock(nItemsOnPage*curPageShop+a));
                         if (item.GetBAtk() != 0)
                         {
-                            Console.SetCursorPosition(24, 10 + a); Console.WriteLine("| 공격력 +");
-                            Console.SetCursorPosition(36, 10 + a); Console.WriteLine(item.GetBAtk().ToString());
+                            Console.SetCursorPosition(29, 10 + a); Console.WriteLine("| 공격력 +");
+                            Console.SetCursorPosition(41, 10 + a); Console.WriteLine(item.GetBAtk().ToString());
                         }
                         if (item.GetBDef() != 0)
                         {
-                            Console.SetCursorPosition(24, 10 + a); Console.WriteLine("| 방어력 +");
-                            Console.SetCursorPosition(36, 10 + a); Console.WriteLine(item.GetBDef().ToString());
+                            Console.SetCursorPosition(29, 10 + a); Console.WriteLine("| 방어력 +");
+                            Console.SetCursorPosition(41, 10 + a); Console.WriteLine(item.GetBDef().ToString());
                         }
-                        Console.SetCursorPosition(38, 10 + a); Console.WriteLine("|");
-                        Console.SetCursorPosition(40, 10 + a); Console.WriteLine("{0,4} G", item.GetPrice());
-                        Console.SetCursorPosition(47, 10 + a); Console.WriteLine("|");
-                        Console.SetCursorPosition(50, 10 + a); Console.WriteLine(item.GetExplanation());
+                        if (item.GetBHP() != 0)
+                        {
+                            Console.SetCursorPosition(29, 10 + a); Console.WriteLine("| H  P +");
+                            Console.SetCursorPosition(41, 10 + a); Console.WriteLine(item.GetBHP().ToString());
+                        }
+                        Console.SetCursorPosition(43, 10 + a); Console.WriteLine("|");
+                        Console.SetCursorPosition(45, 10 + a); Console.WriteLine("{0,4} G", item.GetPrice());
+                        Console.SetCursorPosition(52, 10 + a); Console.WriteLine("|");
+                        Console.SetCursorPosition(55, 10 + a); Console.WriteLine(item.GetExplanation());
                     }
 
                     Console.SetCursorPosition(5,19); Console.WriteLine("1. 아이템 구매");
@@ -396,6 +402,8 @@ namespace W2Project
                                 Console.WriteLine("구매가 완료되었습니다.                     ");
                                 Player.instance.AddItem(Shop.instance.GetItem(curPageShop*nItemsOnPage + itemNo-1));
                                 Shop.instance.SellItem(curPageShop*nItemsOnPage + itemNo-1);
+                                Console.SetCursorPosition(10, 10 + itemNo -1);
+                                Console.WriteLine(Shop.instance.GetItem(curPageShop* nItemsOnPage + itemNo -1).GetName()+ " ({0})  ",Shop.instance.GetStock(nItemsOnPage*curPageShop+itemNo -1));
                                 Console.SetCursorPosition(7, 7);
                                 Console.WriteLine("{0,5} G", Player.instance.GetStatusInt(Player.Status.GOLD));
                             }
@@ -445,7 +453,7 @@ namespace W2Project
                     Console.SetCursorPosition(65, 6); Console.WriteLine("{0} p / {1} p (8)< | >(9)", curPageQuest, maxPageQuest);
                     for(int a=0; a<(curPageQuest==maxPageQuest?Program.quest_list.Count%nQuestsOnPage:nQuestsOnPage); a++)
                     {
-                        Quest quest = Program.quest_list[a];
+                        Quest quest = Program.quest_list[curPageQuest* nQuestsOnPage + a];
                         int progress = Player.instance.GetQuestStatusViaQID(quest.GetDataInt(QuestIdx.ID)).Item1;
                         Console.SetCursorPosition(7, 7 + 2*(a));
                         if (opt == 0)
@@ -607,6 +615,68 @@ namespace W2Project
                         Console.SetCursorPosition(5, 23); Console.Write(">>  ");
                     }
                     break;
+                case SceneType.Rest:
+                    bool isDrinkable = false;
+                    if(opt != 0)
+                    {
+                        isDrinkable = Player.instance.UsePotion(opt-1);
+                    }
+                    Console.SetCursorPosition(5, 3);
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.Write("[휴식 및 강화]");
+                    Console.ResetColor();
+                    Console.SetCursorPosition(5, 4);  Console.WriteLine("아이템을 사용하여 플레이어의 스텟을 올릴 수 있습니다.");
+                    // 포션 보유 수량 및 효과; 체력포션, 공격력포션, 방어력 포션
+                    // 현재 플레이어의 스텟 (공,방,체)
+                    Console.SetCursorPosition(7, 6); Console.WriteLine("[플레이어 스텟]");
+                    Console.SetCursorPosition(7, 7); Console.WriteLine("ATK: {0}",Player.instance.GetStatusInt(Player.Status.ATK));
+                    Console.SetCursorPosition(7, 8); Console.WriteLine("DEF: {0}",Player.instance.GetStatusInt(Player.Status.DEF));
+                    Console.SetCursorPosition(7, 9); Console.WriteLine("H P: {0} / {1}",Player.instance.GetStatusInt(Player.Status.HP), Player.instance.GetStatusInt(Player.Status.MHP));
+                    Console.SetCursorPosition(7, 11); Console.WriteLine("[보유 포션]");
+                    Console.SetCursorPosition(7, 12); Console.WriteLine("{0,9}","체력 포션");
+                    Console.SetCursorPosition(7, 13); Console.WriteLine("{0,9}","공격 포션");
+                    Console.SetCursorPosition(7, 14); Console.WriteLine("{0,9}","방어 포션");
+                    for(int a=0; a < 3; a++) // 0: HP, 1: ATK; 2: DEF
+                    {
+                        int idx = Player.instance.fPotion_idx[a];
+                        int count = idx==-1?0:Player.instance.GetEquipStatus(idx);
+                        Console.SetCursorPosition(20, 12 + a); Console.WriteLine("({0})",count);
+                        if(count >0)
+                        switch(a)
+                        {
+                            case 0:
+                                Console.SetCursorPosition(30, 12 + a);
+                                Console.WriteLine("HP + {0}", Player.instance.GetItem(idx).GetBHP());
+                                break;
+                            case 1:
+                                Console.SetCursorPosition(30, 12 + a);
+                                Console.WriteLine("ATK + {0}", Player.instance.GetItem(idx).GetBAtk());
+                                break;
+                            case 2:
+                                Console.SetCursorPosition(30, 12 + a);
+                                Console.WriteLine("DEF + {0}", Player.instance.GetItem(idx).GetBDef());
+                                break;
+                        }
+                    }
+                    if(opt !=0)
+                    {
+                        if (isDrinkable)
+                        {
+                            Console.SetCursorPosition(5, 18); Console.WriteLine("포션을 사용했습니다.");
+                        }
+                        else
+                        {
+                            Console.SetCursorPosition(5, 18); Console.WriteLine("포션이 부족합니다.  ");
+                        }
+                    }
+                    Console.SetCursorPosition(5, 19); Console.WriteLine("1. 체력 포션 사용하기");
+                    Console.SetCursorPosition(30, 19); Console.WriteLine("2. 공격 포션 사용하기");
+                    Console.SetCursorPosition(55, 19); Console.WriteLine("3. 방어 포션 사용하기");
+                    Console.SetCursorPosition(5, 20); Console.WriteLine("0. 나가기");
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("원하시는 행동을 입력해주세요");
+                    Console.SetCursorPosition(5, 23); Console.Write(">>");
+                    Console.SetCursorPosition(8, 23);
+                    break;
                 case SceneType.End:
                     Console.SetCursorPosition(0, 10); Console.WriteLine("{0}",Program.CenterAlign("저장하시겠습니까?",Console.WindowWidth));
                     Console.SetCursorPosition(7, 15); Console.WriteLine("1. 저장 후 종료");
@@ -637,6 +707,7 @@ namespace W2Project
         Shop,
         Dungeon,
         Quest,
+        Rest,
         End
     }
 }

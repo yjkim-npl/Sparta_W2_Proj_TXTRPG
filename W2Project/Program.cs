@@ -280,6 +280,7 @@ namespace W2Project
             scene.MoveScene(SceneType.Main);
             int choice = Choice(1, 6);
             int equip_opt = 0;
+            int rest_opt = 0;
             int shop_opt = 0;
             int quest_opt = 0;
             bool wantSave = false;
@@ -351,7 +352,10 @@ namespace W2Project
                         choice = Choice(0, 0);
                         break;
                     case 5:
-                        Player.instance.UsePotion();
+                        scene.MoveScene(SceneType.Rest, rest_opt);
+                        rest_opt = Choice(0, 3);
+                        if (rest_opt == 0)
+                            choice = 0;
 //                        if (
 //                            (Player.instance.GetStatusInt(Player.Status.HP)) +
 //                            (Player.instance.GetStatusInt(Player.Status.BHP)) <
@@ -362,7 +366,6 @@ namespace W2Project
 //                        {
 //                            Player.instance.FullHealth();
 //                        }
-                        choice = 0;
                         break;
                     case 6:
                         if(quest_opt == 1)
@@ -374,7 +377,7 @@ namespace W2Project
                         }
                         else
                         {
-                            scene.MoveScene(SceneType.Quest);
+                            scene.MoveScene(SceneType.Quest,quest_opt);
                             quest_opt = Choice(0, 9,2,7);
                             if(quest_opt == 0)
                                 choice= 0;

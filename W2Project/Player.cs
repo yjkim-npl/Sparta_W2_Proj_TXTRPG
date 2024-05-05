@@ -27,6 +27,11 @@ namespace W2Project
         int fArmorLvl;
         int fRingLvl;
 
+        public int fHP_p_idx { get; private set; }
+        public int fATK_p_idx { get; private set; }
+        public int fDEF_p_idx { get; private set; }
+        public int[] fPotion_idx { get; private set; }
+
         // hope to be use vector<pair(Item,bool)>...
         List<Item> lis_items;
         List<int> lis_equips; // for potion, the equip number means the number of potion
@@ -62,6 +67,7 @@ namespace W2Project
             lis_items = new List<Item>();
             lis_equips = new List<int>();
             lis_quest = new List<(int,int,int,int)>(); 
+            fPotion_idx = new int[3] { -1, -1, -1 };
         }
 
         public Player(int lvl, string name, string job, int atk, int batk, int def, int bdef, int HP, int MHP, int bHP, int gold, int exp, int mexp, List<Item> items, List<int> equips,List<(int,int,int,int)> quest)
@@ -83,6 +89,7 @@ namespace W2Project
             fMaxExp = mexp;
             lis_items = items;
             lis_equips = equips;
+            fPotion_idx = new int[3] { -1, -1, -1 };
             for (int a = 0; a < lis_items.Count; a++)
             {
                 if (lis_equips[a] != 1) continue;
@@ -92,6 +99,25 @@ namespace W2Project
                     fArmorLvl += lis_items[a].GetHierachy();
                 if (lis_items[a].GetBHP() > 0 && (fRingLvl & lis_items[a].GetHierachy()) != lis_items[a].GetHierachy())
                     fRingLvl += lis_items[a].GetHierachy();
+
+                // potion
+                if (lis_items[a].GetType() == ItemType.Use)
+                {
+                    switch(lis_items[a].GetID())
+                    {
+                        case 9: // HP potion
+                            fPotion_idx[0] = a;
+                            break;
+                        case 10: // ATK potion
+                            fPotion_idx[1] = a;
+                            break;
+                        case 11: // DEF potion
+                            fPotion_idx[2] = a;
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
             lis_quest = quest;
         }
@@ -231,44 +257,55 @@ namespace W2Project
         {
             return lis_items[idx];
         }
-        public void UsePotion()
+        public bool UsePotion(int opt)
         {
-            int idx = 0;
-            foreach (Item item in lis_items)
+            if (fPotion_idx[opt] == -1)
             {
-                if( item.GetType() == ItemType.Use)
-                {
-                    idx = lis_items.IndexOf(item);
-                    break;
-                }
+                return false;
             }
-
-            if (lis_equips[idx] > 0)
+            switch (opt)
             {
-                lis_equips[idx]--;
-                fHP += lis_items[idx].GetBHP();
-                if(fHP > fMaxHP + fBonusHP)
-                    fHP = fMaxHP + fBonusHP;
+                case 0: // HP
+                    if (lis_equips[fPotion_idx[0]] > 0)
+                    {
+                        lis_equips[fPotion_idx[0]]--;
+                        fHP += lis_items[fPotion_idx[0]].GetBHP();
+                        if (fHP > fMaxHP + fBonusHP)
+                            fHP = fMaxHP + fBonusHP;
+                        return true;
+                    }
+                    else
+                        return false;
+                    break;
+                case 1: // ATK
+                    if (lis_equips[fPotion_idx[1]] > 0)
+                    {
+                        lis_equips[fPotion_idx[1]]--;
+                        fAtk += lis_items[fPotion_idx[1]].GetBAtk();
+                        return true;
+                    }
+                    else
+                        return false;
+                    break;
+                case 2: // DEF
+                    if (lis_equips[fPotion_idx[2]] > 0)
+                    {
+                        lis_equips[fPotion_idx[2]]--;
+                        fDef += lis_items[fPotion_idx[2]].GetBDef();
+                        return true;
+                    }
+                    else
+                        return false;
+                    break;
+                default:
+                    return false;
+                    break;
             }
         }
-        public int GetNumberOfPotion()
+        public int GetNumberOfPotion(int opt)
         {
-            int idx = 0;
-            int num = 0;
-            foreach (Item item in lis_items)
-            {
-                if( item.GetType() == ItemType.Use)
-                {
-                    idx = lis_items.IndexOf(item);
-                    break;
-                }
-            }
-
-            if (lis_equips[idx] > 0)
-            {
-                num = lis_equips[idx];
-            }
-            return num;
+            int result = lis_equips[fPotion_idx[opt]];
+            return result;
         }
         public int GetHierachyLvl(Hierachy hier)
         {
@@ -345,11 +382,29 @@ namespace W2Project
         }
         public void AddItem(Item item, int opt=1)
         {
-            lis_items.Add(item);
+            if (!lis_items.Contains(item))
+                lis_items.Add(item);
             if(item.GetType() == ItemType.Use)
             {
+                // assign index while pushing the list
                 if (lis_items.Count > lis_equips.Count)
+                {
                     lis_equips.Add(1);
+                    switch(item.GetID())
+                    {
+                        case 9: // HP
+                            fPotion_idx[0] = lis_equips.Count - 1;
+                            break;
+                        case 10: // ATK
+                            fPotion_idx[1] = lis_equips.Count - 1;
+                            break;
+                        case 11: // DEF
+                            fPotion_idx[2] = lis_equips.Count - 1;
+                            break;
+                        default:
+                            break;
+                    }
+                }
                 else
                 {
                     int idx = lis_items.IndexOf(item);
