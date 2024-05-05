@@ -22,37 +22,27 @@ namespace W2Project
         public string Name { get; set; }
         public int ID { get; set; }
         public int Lvl { get; set; }
-        public int Type { get; set; }
+        public EnemyType Type { get; set; }
         public int Attack { get; set; }
         public int Def { get; set; }
         public int Health { get; set; }
         public int Gold { get; set; }
         public int Exp { get; set; }
         public bool IsDead { get; private set; } = false;
-        public Enemy(string name, int id, int lvl, int enemyType, int attack, int def, int health, int gold, int exp)
+
+        public Enemy(string name, int id, int lvl, EnemyType type, int attack, int def, int health, int gold, int exp)
         {
             Name = name;
             ID = id;
             Lvl = lvl;
-            Type = enemyType;
-            //switch (enemyType)
-            //{
-            //    case 0:
-            //        Type = EnemyType.None;
-            //        break;
-            //    case 1:
-            //        Type = EnemyType.Mob;
-            //        break;
-            //    case 2:
-            //        Type = EnemyType.Boss;
-            //        break;
-            //}
+            Type = type;
             Attack = attack;
             Def = def;
             Health = health;
             Gold = gold;
             Exp = exp;
         }
+
         public void Damage(int amount)
         {
             Health -= amount;
@@ -66,8 +56,45 @@ namespace W2Project
         }
     }
 
-    class EnemyManager
-    { 
+
+    public class EnemyCsv
+    {
+        public static List<Enemy> LoadEnemiesFromCsv(string filePath)
+        {
+            List<Enemy> enemiesList = new List<Enemy>();
+
+            using (StreamReader sr = new StreamReader(filePath))
+            {
+                sr.ReadLine();
+
+                while (!sr.EndOfStream)
+                {
+                    string line = sr.ReadLine();
+                    string[] fields = line.Split(',');
+
+                    string name = fields[0];
+                    int id = int.Parse(fields[1]);
+                    int lvl = int.Parse(fields[2]);
+                    EnemyType type = (EnemyType)Enum.Parse(typeof(EnemyType), fields[3]);
+                    int attack = int.Parse(fields[4]);
+                    int def = int.Parse(fields[5]);
+                    int health = int.Parse(fields[6]);
+                    int gold = int.Parse(fields[7]);
+                    int exp = int.Parse(fields[8]);
+
+                    Enemy enemy = new Enemy(name, id, lvl, type, attack, def, health, gold, exp);
+                    enemiesList.Add(enemy);
+                }
+            }
+
+            return enemiesList;
+        }
+    }
+
+
+
+    public class EnemyManager
+    {
         private List<Enemy> type0Enemies;
         private List<Enemy> type1Enemies;
         private List<Enemy> type2Enemies;
@@ -79,22 +106,27 @@ namespace W2Project
             type1Enemies = new List<Enemy>();
             type2Enemies = new List<Enemy>();
 
-            // 필요한 초기화 작업 수행 
-            //(string name, int id, int lvl, int enemyType, int attack, int def, int health, int gold, int exp)
+            List<Enemy> enemiesList = EnemyCsv.LoadEnemiesFromCsv($"../../../../Assets/EnemyList.csv");
 
-            type0Enemies.Add(new Enemy("Test1", 1, 1, 0, 10, 5, 20, 5, 10));
-            type0Enemies.Add(new Enemy("Test2", 2, 1, 0, 12, 6, 22, 7, 12));
-            type0Enemies.Add(new Enemy("Test3", 3, 2, 0, 15, 8, 30, 10, 15));
-
-            type1Enemies.Add(new Enemy("Test mob1", 4, 2, 1, 15, 8, 30, 10, 15));
-            type1Enemies.Add(new Enemy("Test mob2", 5, 2, 1, 18, 10, 35, 12, 20));
-            type1Enemies.Add(new Enemy("Test mob3", 6, 3, 1, 30, 15, 100, 50, 100));
-
-            type2Enemies.Add(new Enemy("Test boss1", 7, 3, 2, 30, 15, 100, 50, 100));
-            type2Enemies.Add(new Enemy("Test boss2", 8, 3, 2, 35, 18, 120, 60, 120));
-            type2Enemies.Add(new Enemy("Test boss3", 9, 4, 2, 40, 20, 140, 70, 140));
+            // Add enemies to corresponding lists based on their types
+            foreach (var enemy in enemiesList)
+            {
+                switch (enemy.Type)
+                {
+                    case EnemyType.None:
+                        type0Enemies.Add(enemy);
+                        break;
+                    case EnemyType.Mob:
+                        type1Enemies.Add(enemy);
+                        break;
+                    case EnemyType.Boss:
+                        type2Enemies.Add(enemy);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid enemy type.");
+                }
+            }
         }
-
         public Enemy TypeEnemy(int type)
         {
             Random random = new Random();
@@ -128,9 +160,9 @@ namespace W2Project
     }
 }
 public enum EnemyType
-        {
-            Mob,
-            Boss,
-            None
-        }
-    
+{
+    None,
+    Mob,
+    Boss
+}
+
