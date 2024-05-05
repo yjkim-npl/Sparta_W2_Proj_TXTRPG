@@ -343,7 +343,7 @@ namespace W2Project
                 }
             }
         }
-        public void BuyItem(Item item)
+        public void AddItem(Item item, int opt=1)
         {
             lis_items.Add(item);
             if(item.GetType() == ItemType.Use)
@@ -360,7 +360,8 @@ namespace W2Project
             {
                 lis_equips.Add(0);
             }
-            fGold -= item.GetPrice();
+            if(opt == 1)
+                fGold -= item.GetPrice();
         }
 
         public int GetNQuestAccepted()
@@ -385,7 +386,11 @@ namespace W2Project
         public bool AcceptQuest(int q_ID)
         {
             Quest quest = Program.quest_list[q_ID];
-            if (quest.IsAcceptable(this))
+            if(GetQuestStatusViaQID(q_ID).Item1 == 1)
+            {
+                return false;
+            }
+            else if (quest.IsAcceptable(this))
             {
                 int cur_quests = 0;
                 for(int a=0; a<lis_quest.Count; a++)
@@ -411,13 +416,37 @@ namespace W2Project
         {
             for(int a=0; a<lis_quest.Count; a++)
             {
-                if (lis_quest[a].questID == q_ID)
+                if (lis_quest[a].questID == q_ID && lis_quest[a].curr >= lis_quest[a].goal)
                 {
-                    if (lis_quest[a].curr >= lis_quest[a].goal)
+                    lis_quest[a] = (2,q_ID, 0,0);
+
+                    Item rwd_Item = new Item();
+                    int rwd_Exp = 0;
+                    int rwd_Gold = 0;
+                    int rwd_ItemID = 0;
+                    foreach (var quest in Program.quest_list)
                     {
-                        lis_quest[a] = (2,q_ID, 0,0);
-                        return true;
+                        if(quest.GetDataInt(QuestIdx.ID) == q_ID)
+                        {
+                            rwd_ItemID = quest.GetDataInt(QuestIdx.RewardItemID);
+                            rwd_Exp = quest.GetDataInt(QuestIdx.RewardExp);
+                            rwd_Gold = quest.GetDataInt(QuestIdx.RewardGold);
+                            break;
+                        }
                     }
+                    foreach (var item in Program.item_list)
+                    {
+                        if (item.GetID() == rwd_ItemID)
+                        {
+                            rwd_Item = item;
+                            break;
+                        }
+                    }
+
+                    AddItem(rwd_Item, 0);
+                    AddExp(rwd_Exp);
+                    AddGold(rwd_Gold);
+                    return true;
                 }
             }
             return false;

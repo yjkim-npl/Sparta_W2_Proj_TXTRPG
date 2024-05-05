@@ -7,8 +7,6 @@ namespace W2Project
     {
         public static List<Item> item_list;
         public static List<Enemy> enemy_list;
-
-
         public static List<Quest> quest_list;
         //public static List<Monster> monster_list;
 
@@ -170,10 +168,10 @@ namespace W2Project
                         }
                     }
                 }
-                List<string> lis_quests_status = stats[15].Split(' ').ToList();
-                List<string> lis_quests_ID = stats[16].Split(' ').ToList();
-                List<string> lis_quests_Curr = stats[17].Split(' ').ToList();
-                List<string> lis_quests_Goal = stats[18].Split(' ').ToList();
+                List<string> lis_quests_status = stats[15]==""? new List<string>() : stats[15].Split(' ').ToList();
+                List<string> lis_quests_ID = stats[16]==""? new List<string>(): stats[16].Split(' ').ToList();
+                List<string> lis_quests_Curr = stats[17] == "" ? new List<string>() : stats[17].Split(' ').ToList();
+                List<string> lis_quests_Goal = stats[18] == "" ? new List<string>() : stats[18].Split(' ').ToList();
                 List<(int, int, int, int)> lis_quest_info = new List<(int, int, int, int)>();
                 for( int a=0; a<lis_quests_status.Count; a++)
                 {
@@ -425,6 +423,7 @@ namespace W2Project
                 {
                     sw_dat.Write("{0} ", Player.instance.GetEquipStatus(a));
                 }
+                sw_dat.Write('\n');
                 List<int> lis_player_quest_status = new List<int>();
                 List<int> lis_player_quest_qID = new List<int>();
                 List<int> lis_player_quest_Curr = new List<int>();

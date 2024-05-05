@@ -366,6 +366,7 @@ namespace W2Project
                     Console.SetCursorPosition(5,20); Console.WriteLine("0. 나가기");
                     if (opt == 1)
                     {
+                        Console.SetCursorPosition(5, 19); Console.WriteLine("{0,20}", "");
                         for(int a=0; a<(curPageShop==maxPageShop?Shop.instance.GetNItem()%nItemsOnPage:nItemsOnPage); a++)
                         {
                             Console.SetCursorPosition(7, 10+a);
@@ -382,19 +383,19 @@ namespace W2Project
                             Console.SetCursorPosition(5, 20); Console.WriteLine("0. 나가기");
                             Console.SetCursorPosition(5, 23); Console.Write(">>     ");
                             Console.SetCursorPosition(5, 18);
-                            if(Player.instance.GetStatusInt(Player.Status.GOLD) < Shop.instance.GetItem(itemNo-1).GetPrice())
+                            if(Player.instance.GetStatusInt(Player.Status.GOLD) < Shop.instance.GetItem(curPageShop*nItemsOnPage + itemNo-1).GetPrice())
                             {
                                 Console.WriteLine("소지금이 모자랍니다.                         ");
                             }
-                            else if(Shop.instance.GetStock(itemNo-1) <=0)
+                            else if(Shop.instance.GetStock(curPageShop*nItemsOnPage + itemNo-1) <=0)
                             {
                                 Console.WriteLine("재고가 부족합니다.                         ");
                             }
                             else
                             {
                                 Console.WriteLine("구매가 완료되었습니다.                     ");
-                                Player.instance.BuyItem(Shop.instance.GetItem(itemNo-1));
-                                Shop.instance.SellItem(itemNo-1);
+                                Player.instance.AddItem(Shop.instance.GetItem(curPageShop*nItemsOnPage + itemNo-1));
+                                Shop.instance.SellItem(curPageShop*nItemsOnPage + itemNo-1);
                                 Console.SetCursorPosition(7, 7);
                                 Console.WriteLine("{0,5} G", Player.instance.GetStatusInt(Player.Status.GOLD));
                             }
@@ -491,18 +492,50 @@ namespace W2Project
                         else
                             Console.WriteLine("");
                         string rwd_item_name = "";
-                        Console.SetCursorPosition(35, 8 + 2*a);
+                        Console.SetCursorPosition(50, 8 + 2*a);
                         foreach(var item in Program.item_list)
                         {
                             if (item.GetID() == quest.GetDataInt(QuestIdx.RewardItemID))
                             {
                                 rwd_item_name = item.GetName();
-                                Console.WriteLine(rwd_item_name);
+                                Console.WriteLine("| 보상: {0}",rwd_item_name);
                                 break;
                             }
                         }
-                        Console.SetCursorPosition(50, 8 + 2*a); Console.WriteLine("Gold: +{0}",quest.GetDataInt(QuestIdx.RewardGold));
-                        Console.SetCursorPosition(60, 8 + 2*a); Console.WriteLine("Exp: +{0}",quest.GetDataInt(QuestIdx.RewardExp));
+                        Console.SetCursorPosition(21, 8 + 2*a); Console.WriteLine("{0}",quest.GetDataStr(QuestIdx.Condition));
+                        Console.SetCursorPosition(17, 8 + 2*a); Console.WriteLine("조건: ");
+                        Console.SetCursorPosition(32, 8 + 2*a); Console.WriteLine("|");
+                        if(quest.GetDataInt(QuestIdx.Type) == (int)QuestType.Hunt)
+                        {
+                            string enemyName = "Mob1";
+                            // Program.enemy_list를 채운 후 주석 해제할것 
+//                            foreach (var enemy in Program.enemy_list)
+//                            {
+//                                if (enemy.ID == quest.GetDataInt(QuestIdx.TargetID))
+//                                {
+//                                    enemyName = enemy.Name;
+                                    int goalNum = quest.GetDataInt(QuestIdx.GoalNum);
+                                    Console.SetCursorPosition(35, 8 + 2 * a); Console.WriteLine("{0} {1}마리", enemyName,goalNum);
+//                                    break;
+//                                }
+//                            }
+                        }
+                        else if (quest.GetDataInt(QuestIdx.Type) == (int)QuestType.Collect)
+                        {
+                            string itemName;
+                            foreach (var item in Program.item_list)
+                            {
+                                if (item.GetID() == quest.GetDataInt(QuestIdx.TargetID))
+                                {
+                                    itemName = item.GetName().ToString();
+                                    int goalNum = quest.GetDataInt(QuestIdx.GoalNum);
+                                    Console.SetCursorPosition(35, 8 + 2 * a); Console.WriteLine("{0} {1}개", itemName, goalNum);
+                                    break;
+                                }
+                            }
+                        }
+                        Console.SetCursorPosition(70, 8 + 2*a); Console.WriteLine("Gold: +{0}",quest.GetDataInt(QuestIdx.RewardGold));
+                        Console.SetCursorPosition(80, 8 + 2*a); Console.WriteLine("Exp: +{0}",quest.GetDataInt(QuestIdx.RewardExp));
 
                     }
                     Console.SetCursorPosition(5, 19); Console.WriteLine("1. 퀘스트관리");
@@ -531,7 +564,7 @@ namespace W2Project
                             else if (Player.instance.AcceptQuest(nQuestsOnPage*curPageQuest + questNo -1))
                             {
                                 Console.SetCursorPosition(5, 18); Console.WriteLine("퀘스트를 수락했습니다.                                                     ");
-                                Console.SetCursorPosition(5, 19); Console.WriteLine("수락 / 완료 하고싶은 아이템의 번호를 입력하세요");
+                                Console.SetCursorPosition(5, 19); Console.WriteLine("수락 / 완료 하고싶은 퀘스트의 번호를 입력하세요");
                                 Console.SetCursorPosition(7, 7 + 2*(questNo-1));
                                 Console.WriteLine("{0}. [진] ", questNo);
                             }
@@ -542,8 +575,15 @@ namespace W2Project
                                 Console.SetCursorPosition(7, 7 + 2*(questNo-1));
                                 Console.WriteLine("{0}. [완] ", questNo);
                             }
-                            else if (Player.instance.GetQuestStatusViaQID(nQuestsOnPage* curPageQuest + questNo -1).Item3 /
-                                     Player.instance.GetQuestStatusViaQID(nQuestsOnPage* curPageQuest + questNo-1).Item1 <1)
+                            else
+                            {
+                                Console.SetCursorPosition(5, 18); Console.WriteLine("퀘스트를 받기엔 플레이어의 스테이터스가 부족합니다.                          ");
+                                Console.SetCursorPosition(5, 19); Console.WriteLine("수락 / 완료 하고싶은 아이템의 번호를 입력하세요");
+                            }
+                            if (Player.instance.GetQuestStatusViaQID(nQuestsOnPage* curPageQuest + questNo -1).Item1 == 1 && // in progress
+                                     Player.instance.GetQuestStatusViaQID(nQuestsOnPage* curPageQuest + questNo -1).Item4 != 0 && // goalNum is not equal to 0
+                                     Player.instance.GetQuestStatusViaQID(nQuestsOnPage* curPageQuest + questNo -1).Item3 /       // when the currNum is not bigger than GoalNum
+                                     Player.instance.GetQuestStatusViaQID(nQuestsOnPage* curPageQuest + questNo-1).Item4 <1)
                             {
                                 Console.SetCursorPosition(5, 18); Console.WriteLine("아직 완료하지 못한 퀘스트입니다.            ");
                                 Console.SetCursorPosition(5, 19); Console.WriteLine("수락 / 완료 하고싶은 퀘스트의 번호를 입력하세요");
