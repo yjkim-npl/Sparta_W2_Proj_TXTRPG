@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using System.Data.Common;
 using System.Xml.Serialization;
 
 namespace W2Project
@@ -212,13 +213,27 @@ namespace W2Project
             else
             {
                 player = new Player(username);
-            }
-
-            if(!LoadData)
-            {
                 scene.MoveScene(SceneType.Jobs);
                 string jobChoiceString = Console.ReadLine();
+                string job;
+                switch(jobChoiceString)
+                {
+                    case "1":
+                        job = "Warrior";
+                        break;
+                    case "2":
+                        job = "Archer";
+                        break;
+                    case "3":
+                        job = "Chief";
+                        break;
+                    default:
+                        job = "ETC";
+                        break;
+                }
+                player.AssignJob(job);
             }
+
 
             //switch(int.Parse(jobChoiceString))
             //{

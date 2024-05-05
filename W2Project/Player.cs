@@ -148,6 +148,11 @@ namespace W2Project
             fDef = 3;
         }
 
+        public void AssignJob(string job)
+        {
+            fJob = job;
+        }
+
         public void AddExp(int exp) // Level up logic was also included
         {
             fExp += exp;
