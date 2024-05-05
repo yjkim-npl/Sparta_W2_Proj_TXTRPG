@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using System.IO;
 using static System.Net.WebRequestMethods;
 using static W2Project.Player;
+using static W2Project.Skills;
 
 namespace W2Project
 {
@@ -22,8 +23,14 @@ namespace W2Project
         private const int MAX_MONSTERS = 3; // 몬스터 최대 3마리
         private int totalGoldEarned = 0; // 플레이어가 얻는 총 골드
         private int totalExpEarned = 0; // 플레이어가 얻는 총 경험치
-        
-   
+        WarriorSkills warriorSkills = new WarriorSkills();
+        ArcherSkills archerSkills = new ArcherSkills();
+        ChiefSkills chiefSkills = new ChiefSkills();
+
+        bool FirstSkillActive = false;
+        bool secondSkillActive = false;
+        bool thirdSkillActive = false;
+
         EnemyManager enemyList = new EnemyManager();
 
         public void BattlePhase()
@@ -72,8 +79,8 @@ namespace W2Project
                     Console.SetCursorPosition(8, 23);
 
                     int monsterChoice;
-                    string monsterChoiceString = Console.ReadLine();
-                    bool isValidInput = int.TryParse(monsterChoiceString, out monsterChoice);
+                    string ChoiceString = Console.ReadLine();
+                    bool isValidInput = int.TryParse(ChoiceString, out monsterChoice);
 
                     if (isValidInput && monsterChoice >= 1 && monsterChoice <= enemiesList.Count)
                     {
@@ -94,7 +101,59 @@ namespace W2Project
                         Console.SetCursorPosition(5, 22); Console.WriteLine("                               ");
                         int playerDamage = AttackDamage();
                         int enemyHealthBeforeAttack = enemy.Health; // 몬스터 공격 받기 전 체력
-                        enemy.Damage(playerDamage);
+
+                        if (FirstSkillActive == true) // 첫번 째 스킬 대미지 입력
+                        {
+                            if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
+                            {
+                                warriorSkills.AlphaStrike(enemy);
+                            }
+                            else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
+                            {
+                                archerSkills.DualShot(enemy);
+                            }
+                            else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
+                            {
+                                chiefSkills.VitalStrike(enemy);
+                            }
+                            FirstSkillActive = false;
+                        }
+                        else if (secondSkillActive == true)// 두번 째 스킬 대미지 입력
+                        {
+                            if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
+                            {
+                                warriorSkills.AlphaStrike(enemy);
+                            }
+                            else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
+                            {
+                                archerSkills.DualShot(enemy);
+                            }
+                            else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
+                            {
+                                chiefSkills.VitalStrike(enemy);
+                            }
+                            secondSkillActive = false;
+                        }
+                        else if (thirdSkillActive == true)// 세번 째 스킬 대미지 입력
+                        {
+                            if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
+                            {
+                                warriorSkills.AlphaStrike(enemy);
+                            }
+                            else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
+                            {
+                                archerSkills.DualShot(enemy);
+                            }
+                            else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
+                            {
+                                chiefSkills.VitalStrike(enemy);
+                            }
+                            thirdSkillActive = false;
+                        }
+                        else
+                        {
+                            enemy.Damage(playerDamage);
+                        }
                         int enemyHealthAfterAttack = enemy.Health; // 몬스터 공격 받은 후 체력
                         Console.SetCursorPosition(7, 12); Console.WriteLine("{0,-25}", $"몬스터의 현재 체력 : {enemyHealthBeforeAttack} -> {enemyHealthAfterAttack}"); // 결과
                     }
@@ -167,16 +226,132 @@ namespace W2Project
                     }
 
                 }
-                else if (input == "2") 
+                else if (input == "2") // 스킬 UI
                 {
-                    Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-45}", " ");
-                    Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-45}", " ");
-                    Console.SetCursorPosition(5, 22); Console.WriteLine("{0,-45}", "몬스터 번호를 입력하세요. ");
-                    Console.SetCursorPosition(5, 23); Console.Write(">>     ");
-                    Console.SetCursorPosition(40, 12); Console.Write("             ");
-                    Console.SetCursorPosition(8, 23);
-                }
+                        if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior") 
+                        {
+                            Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. AlphaStrike");
+                            Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
+                            Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
+                        }
+                        else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
+                        {
+                            Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. DualShot");
+                            Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
+                            Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
+                        }
+                        else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
+                        {
+                            Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. VitalStrike");
+                            Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
+                            Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
+                        }
+                        else
+                        {
+                            Console.SetCursorPosition(5, 19); Console.WriteLine("1. 직업이 없습니다");
+                            Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}");
+                            Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}");
+                            return;
+                        }
+                    if (FirstSkillActive == true || secondSkillActive == true || thirdSkillActive == true)
+                    {
+                        Console.SetCursorPosition(5, 19); Console.WriteLine("이미 스킬을 시전 중입니다.");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("                   ");
+                        Console.SetCursorPosition(5, 21); Console.WriteLine("                   ");
+                    }
 
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("{0,-45}", "사용할 스킬의 번호를 입력하세요. ");
+                    Console.SetCursorPosition(5, 23); Console.Write(">>     ");
+                    Console.SetCursorPosition(8, 23);
+                    string skillSecetiedNum = Console.ReadLine();
+
+
+                    if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
+                    {
+                        if (int.TryParse(skillSecetiedNum, out int selectedWariiorSkillNum))
+                        {
+                            if (selectedWariiorSkillNum == 1)
+                            {
+                                // 스킬 번호가 1일 때의 처리
+                                FirstSkillActive = true;
+                            }
+                            else if (selectedWariiorSkillNum == 2)
+                            {
+                                // 다른 스킬 번호일 때의 처리
+                                secondSkillActive = true;
+                            }
+                            else if (selectedWariiorSkillNum == 3)
+                            {
+                                // 다른 스킬 번호일 때의 처리
+                                thirdSkillActive = true;
+                            }
+                            else
+                            {
+                                Console.SetCursorPosition(5, 22); Console.WriteLine("옳바른 숫자를 입력해주세요.");
+                                continue;
+                            }
+                        }
+                        else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
+                        {
+                            if (int.TryParse(skillSecetiedNum, out int selectedArcherSkillNum))
+                            {
+                                if (selectedArcherSkillNum == 1)
+                                {
+                                    // 스킬 번호가 1일 때의 처리
+                                    FirstSkillActive = true;
+                                }
+                                else if (selectedArcherSkillNum == 2)
+                                {
+                                    // 다른 스킬 번호일 때의 처리
+                                    secondSkillActive = true;
+                                }
+                                else if (selectedArcherSkillNum == 3)
+                                {
+                                    // 다른 스킬 번호일 때의 처리
+                                    thirdSkillActive = true;
+                                }
+                                else
+                                {
+                                    Console.SetCursorPosition(5, 22); Console.WriteLine("옳바른 숫자를 입력해주세요.");
+                                    continue;
+                                }
+                            }
+                        }
+                        else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
+                        {
+                            if (int.TryParse(skillSecetiedNum, out int selectedChiefSkillNum))
+                            {
+                                if (selectedChiefSkillNum == 1)
+                                {
+                                    // 스킬 번호가 1일 때의 처리
+                                    FirstSkillActive = true;
+                                }
+                                else if (selectedChiefSkillNum == 2)
+                                {
+                                    // 다른 스킬 번호일 때의 처리
+                                    secondSkillActive = true;
+                                }
+                                else if (selectedChiefSkillNum == 3)
+                                {
+                                    // 다른 스킬 번호일 때의 처리
+                                    thirdSkillActive = true;
+                                }
+                                else
+                                {
+                                    Console.SetCursorPosition(5, 22); Console.WriteLine("옳바른 숫자를 입력해주세요.");
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // 잘못된 입력이거나 몬스터 번호가 잘못된 경우
+                            Console.SetCursorPosition(5, 22); Console.WriteLine("1 ~ 3 에서 골라주세요         ");
+                            continue;
+                        }
+
+                    }
+                }
                 else if (input == "0")
                 {
                     DungeonManager.Instance.Type0 = false;
@@ -190,11 +365,10 @@ namespace W2Project
                 else
                 {
                     // 잘못된 입력이거나 몬스터 번호가 잘못된 경우
-                    Console.SetCursorPosition(5, 22); Console.WriteLine("0 ~ 1 에서 골라주세요         ");
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("0 ~ 2 에서 골라주세요         ");
                     continue;
                 }
             }
-
         }
 
         public void BaseScene() // 기본 UI Mark.1
@@ -213,9 +387,9 @@ namespace W2Project
             Console.ResetColor();
             Console.SetCursorPosition(5, 17);
             Console.WriteLine("{0,-60}", $"현재 체력 : {Player.instance.GetStatusInt(Player.Status.HP)}");
-            Console.SetCursorPosition(5, 19); Console.WriteLine("1. 몬스터 공격");
-            Console.SetCursorPosition(5, 20); Console.WriteLine("2. 스킬 공격");
-            Console.SetCursorPosition(5, 21); Console.WriteLine("0. 도망");
+            Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-60}", "1. 몬스터 공격");
+            Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-60}", "2. 스킬 공격");
+            Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-60}", "0. 도망");
             Console.SetCursorPosition(5, 23); Console.Write(">>      ");
             Console.SetCursorPosition(8, 23);
         }
@@ -277,28 +451,34 @@ namespace W2Project
             Console.SetCursorPosition(7, 14); Console.WriteLine("{0,-60}", $"획득 경험치 : Lv.{playerBeforeLVL} EXP : {playerBeforeEXP} -> Lv.{playerAfterLVL} EXP : {playerAfterEXP}" + $" (+{totalExpEarned})"); // 결과
         }
 
-        public int AttackDamage()
+        public int AttackDamage() // 치명타 및 회피 메소드
         {
             int baseDamage = Player.instance.GetStatusInt(Status.ATK);
             bool isCritical = IsCriticalHit();
             bool isAvoid = IsAvoid();
 
-            if (IsCriticalHit())
+            if (!FirstSkillActive && !secondSkillActive && !thirdSkillActive)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.SetCursorPosition(40, 12); Console.WriteLine("치명타!");
-                baseDamage = (int)Math.Round(baseDamage * 1.6); // 치명타가 발생하면 공격력을 1.6 배로 증가
-                Console.ResetColor();
+                if (IsCriticalHit())
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.SetCursorPosition(40, 12); Console.WriteLine("치명타!");
+                    baseDamage = (int)Math.Round(baseDamage * 1.6); // 치명타가 발생하면 공격력을 1.6 배로 증가
+                    Console.ResetColor();
+                }
+
+                if (isAvoid)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.SetCursorPosition(40, 12); Console.WriteLine("회피!       ");
+                    Console.ResetColor();
+                    return 0; // 회피 성공 시 피해 없음
+                }
+
+                return baseDamage; // 조건문 안에 있는 반환
             }
 
-            if (isAvoid)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.SetCursorPosition(40, 12); Console.WriteLine("회피!       ");
-                Console.ResetColor();
-                return 0; // 회피 성공 시 피해 없음
-            }
-
+            // 스킬이 활성화되어 있을 때는 기본 공격력만 반환
             return baseDamage;
         }
 
