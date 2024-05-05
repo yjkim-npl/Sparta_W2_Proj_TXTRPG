@@ -49,6 +49,7 @@ namespace W2Project
 
 
             int dungeonChoice;
+
             if (int.TryParse(dungeonChoiceString, out dungeonChoice))
 
                 int.TryParse(dungeonChoiceString, out dungeonChoice);
@@ -79,7 +80,10 @@ namespace W2Project
                         Console.ResetColor();
                         break;
                     case 0:
-                        return; // 종료
+                        
+                        BaseScene();
+                        Console.SetCursorPosition(5, 5); Console.WriteLine("당신은 던전에서 빠져나왔다!");
+                        return;
                     default:
                         Console.WriteLine("잘못된 입력입니다. 0부터 3 사이의 숫자를 입력하세요.");
                         break;
@@ -96,9 +100,9 @@ namespace W2Project
             }
 
 
-           
 
-         
+
+
         }
         public void BaseScene() // 기본 UI Mark.1
         {

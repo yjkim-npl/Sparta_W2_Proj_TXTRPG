@@ -228,31 +228,31 @@ namespace W2Project
                 }
                 else if (input == "2") // 스킬 UI
                 {
-                        if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior") 
-                        {
-                            Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. AlphaStrike");
-                            Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
-                            Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
-                        }
-                        else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
-                        {
-                            Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. DualShot");
-                            Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
-                            Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
-                        }
-                        else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
-                        {
-                            Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. VitalStrike");
-                            Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
-                            Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
-                        }
-                        else
-                        {
-                            Console.SetCursorPosition(5, 19); Console.WriteLine("1. 직업이 없습니다");
-                            Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}");
-                            Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}");
-                            return;
-                        }
+                    if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
+                    {
+                        Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. AlphaStrike");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
+                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
+                    }
+                    else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
+                    {
+                        Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. DualShot");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
+                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
+                    }
+                    else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
+                    {
+                        Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. VitalStrike");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
+                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
+                    }
+                    else
+                    {
+                        Console.SetCursorPosition(5, 19); Console.WriteLine("1. 직업이 없습니다");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}");
+                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}");
+                        return;
+                    }
                     if (FirstSkillActive == true || secondSkillActive == true || thirdSkillActive == true)
                     {
                         Console.SetCursorPosition(5, 19); Console.WriteLine("이미 스킬을 시전 중입니다.");
@@ -508,7 +508,7 @@ namespace W2Project
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine("{0,-60}", $"몬스터 {j + 1}: DEAD, 체력: {enemy.Health}");
-                    Console.ResetColor(); // 색상을 변경한 후에는 기본 색상으로 리셋해야 합니다.
+                    Console.ResetColor();
                 }
             }
         }
