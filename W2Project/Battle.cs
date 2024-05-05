@@ -155,7 +155,7 @@ namespace W2Project
                             enemy.Damage(playerDamage);
                         }
                         int enemyHealthAfterAttack = enemy.Health; // 몬스터 공격 받은 후 체력
-                        Console.SetCursorPosition(7, 12); Console.WriteLine("{0,-25}", $"몬스터의 현재 체력 : {enemyHealthBeforeAttack} -> {enemyHealthAfterAttack}"); // 결과
+                        Console.SetCursorPosition(7, 12); Console.WriteLine("{0,-25}", $"{enemy.Name}의 현재 체력 : {enemyHealthBeforeAttack} -> {enemyHealthAfterAttack}"); // 결과
                     }
                     else
                     {

@@ -39,6 +39,7 @@ namespace W2Project
         }
         static void Main(string[] args)
         {
+            bool LoadData = false;
             bool isPlaying = true;
             Console.SetWindowSize(90, 30);
 
@@ -199,14 +200,25 @@ namespace W2Project
                     lis_quest_info
                     );
                 sr.Close();
+                switch(stats[2])
+                {
+                    case "Chief":
+                    case "Archer":
+                    case "Warrior":
+                        LoadData = true;
+                        break;
+                }
             }
             else
             {
                 player = new Player(username);
             }
 
-            scene.MoveScene(SceneType.Jobs);
-            string jobChoiceString = Console.ReadLine();
+            if(!LoadData)
+            {
+                scene.MoveScene(SceneType.Jobs);
+                string jobChoiceString = Console.ReadLine();
+            }
 
             //switch(int.Parse(jobChoiceString))
             //{
@@ -262,18 +274,18 @@ namespace W2Project
             //            break;
             //    }
             //}
-            if (int.Parse(jobChoiceString) == 1)
-            {
-                Player.instance.Warrior();
-            }
-            else if (int.Parse(jobChoiceString) == 2)
-            {
-                Player.instance.Archer();
-            }
-            else if (int.Parse(jobChoiceString) == 3)
-            {
-                Player.instance.Chief();
-            }
+//            if (int.Parse(jobChoiceString) == 1)
+//            {
+//                Player.instance.Warrior();
+//            }
+//            else if (int.Parse(jobChoiceString) == 2)
+//            {
+//                Player.instance.Archer();
+//            }
+//            else if (int.Parse(jobChoiceString) == 3)
+//            {
+//                Player.instance.Chief();
+//            }
 
             // MainScene
             scene.MoveScene(SceneType.Main);
@@ -314,7 +326,6 @@ namespace W2Project
                         choice = Choice(0, 0);
                         break;
                     case 2:
-
                         if(equip_opt == 1)
                         {
                             scene.MoveScene(SceneType.Inventory, equip_opt);
