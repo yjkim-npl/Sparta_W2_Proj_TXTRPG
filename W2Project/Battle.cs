@@ -22,8 +22,10 @@ namespace W2Project
         private const int MAX_MONSTERS = 3; // 몬스터 최대 3마리
         private int totalGoldEarned = 0; // 플레이어가 얻는 총 골드
         private int totalExpEarned = 0; // 플레이어가 얻는 총 경험치
-        
-   
+
+
+
+
         EnemyManager enemyList = new EnemyManager();
 
         public void BattlePhase()
