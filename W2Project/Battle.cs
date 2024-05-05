@@ -26,11 +26,6 @@ namespace W2Project
    
         EnemyManager enemyList = new EnemyManager();
 
-
-
-
-        EnemyManager enemyList = new EnemyManager();
-
         public void BattlePhase()
         {
             BaseScene();

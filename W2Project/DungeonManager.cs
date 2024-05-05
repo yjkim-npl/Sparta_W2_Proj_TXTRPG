@@ -53,21 +53,30 @@ namespace W2Project
 
                 int.TryParse(dungeonChoiceString, out dungeonChoice);
 
-                if (dungeonChoice >= 0 && dungeonChoice <= 3)
+            if (dungeonChoice >= 0 && dungeonChoice <= 3)
             {
                 switch (dungeonChoice)
                 {
                     case 1:
-                        Console.SetCursorPosition(5, 13); Console.WriteLine("1. 초급 던전을 선택했습니다.");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.SetCursorPosition(7, 7); Console.WriteLine("1. 초급 던전을 선택했습니다.");
+                        Thread.Sleep(1000);
                         Type0 = true;
+                        Console.ResetColor();
                         break;
                     case 2:
-                        Console.SetCursorPosition(5, 14); Console.WriteLine("2. 중급 던전을 선택했습니다.");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.SetCursorPosition(7, 9); Console.WriteLine("2. 중급 던전을 선택했습니다.");
+                        Thread.Sleep(1000);
                         Type1 = true;
+                        Console.ResetColor();
                         break;
                     case 3:
-                        Console.SetCursorPosition(5, 15); Console.WriteLine("3. 상급 던전을 선택했습니다.");
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.SetCursorPosition(7, 11); Console.WriteLine("3. 상급 던전을 선택했습니다.");
+                        Thread.Sleep(1000);
                         Type2 = true;
+                        Console.ResetColor();
                         break;
                     case 0:
                         return; // 종료
@@ -86,6 +95,18 @@ namespace W2Project
                 }
             }
 
+
+           
+
+         
+        }
+        public void BaseScene() // 기본 UI Mark.1
+        {
+            Console.Clear();
+            Console.WriteLine("--------------------------------------------------------------------------------------------");
+            Console.SetCursorPosition(0, 29);
+            Console.WriteLine("--------------------------------------------------------------------------------------------");
+        }
 
         public void DungeonResult() // 던전 보상 메소드
         {
@@ -162,14 +183,6 @@ namespace W2Project
             {
                 Console.WriteLine("버그 발생");
             }
-        }
-
-        public void BaseScene() // 기본 UI Mark.1
-        {
-            Console.Clear();
-            Console.WriteLine("--------------------------------------------------------------------------------------------");
-            Console.SetCursorPosition(0, 29);
-            Console.WriteLine("--------------------------------------------------------------------------------------------");
         }
     }
 }
