@@ -29,8 +29,7 @@ namespace W2Project
         public int Gold { get; set; }
         public int Exp { get; set; }
         public bool IsDead { get; private set; } = false;
-
-        public Enemy(string name, int id, int lvl, EnemyType type, int attack, int def, int health, int gold, int exp)
+        public Enemy(string name, int id, int lvl, int enemyType, int attack, int def, int health, int gold, int exp)
         {
             Name = name;
             ID = id;
@@ -42,7 +41,6 @@ namespace W2Project
             Gold = gold;
             Exp = exp;
         }
-
         public void Damage(int amount)
         {
             Health -= amount;

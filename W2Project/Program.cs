@@ -6,6 +6,8 @@ namespace W2Project
     internal class Program
     {
         public static List<Item> item_list;
+        public static List<Quest> quest_list;
+        public static List<Monster> monster_list;
         public static List<Enemy> enemy_list;
         public static List<Quest> quest_list;
 
