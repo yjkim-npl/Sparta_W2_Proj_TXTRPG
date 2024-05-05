@@ -26,6 +26,11 @@ namespace W2Project
    
         EnemyManager enemyList = new EnemyManager();
 
+
+
+
+        EnemyManager enemyList = new EnemyManager();
+
         public void BattlePhase()
         {
             BaseScene();
@@ -224,6 +229,10 @@ namespace W2Project
 
             Console.Clear();
             BaseScene();
+
+            DungeonManager.Instance.Type0 = false;
+            DungeonManager.Instance.Type1 = false;
+            DungeonManager.Instance.Type2 = false;
 
             Console.SetCursorPosition(5, 3);
             Console.ForegroundColor = ConsoleColor.DarkBlue;
