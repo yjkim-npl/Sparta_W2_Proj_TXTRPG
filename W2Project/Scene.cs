@@ -13,7 +13,7 @@ namespace W2Project
         public int curPageInven = 0;
         public int curPageShop = 0;
         public int curPageQuest = 0;
-        public int nItemsOnPage = 5;
+        public int nItemsOnPage = 7;
         public int nQuestsOnPage = 4;
         int maxPageInven = 0;
         int maxPageShop = 0;
@@ -585,7 +585,7 @@ namespace W2Project
                                      Player.instance.GetQuestStatusViaQID(nQuestsOnPage* curPageQuest + questNo -1).Item3 /       // when the currNum is not bigger than GoalNum
                                      Player.instance.GetQuestStatusViaQID(nQuestsOnPage* curPageQuest + questNo-1).Item4 <1)
                             {
-                                Console.SetCursorPosition(5, 18); Console.WriteLine("아직 완료하지 못한 퀘스트입니다.            ");
+                                Console.SetCursorPosition(5, 18); Console.WriteLine("{0,-50}","아직 완료하지 못한 퀘스트입니다.            ");
                                 Console.SetCursorPosition(5, 19); Console.WriteLine("수락 / 완료 하고싶은 퀘스트의 번호를 입력하세요");
                             }
                             Console.SetCursorPosition(5, 20); Console.WriteLine("0. 나가기");
