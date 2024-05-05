@@ -20,7 +20,7 @@ namespace W2Project
             {
                 skillDamage = (int)(Player.instance.GetStatusInt(Status.ATK) * 1.5);
                 enemy.Damage(skillDamage);
-                Console.WriteLine("알파 스트라이크를 사용해서 {enemy.Name}에게 {alphaDamage}만큼의 데미지를 입혔습니다.");
+                Console.WriteLine("알파 스트라이크를 사용해서 {enemy.Name}에게 {skillDamage}만큼의 데미지를 입혔습니다.");
             }
         }
 
@@ -30,7 +30,7 @@ namespace W2Project
             {
                 skillDamage = (int)(Player.instance.GetStatusInt(Status.ATK) * 1.5);
                 enemy.Damage(skillDamage);
-                Console.WriteLine("듀얼 샷을 사용해서 {enemy.Name}에게 {alphaDamage}만큼의 데미지를 입혔습니다.");
+                Console.WriteLine("듀얼 샷을 사용해서 {enemy.Name}에게 {skillDamage}만큼의 데미지를 입혔습니다.");
             }
         }
 
@@ -40,7 +40,7 @@ namespace W2Project
             {
                 skillDamage = (int)(Player.instance.GetStatusInt(Status.ATK) * 1.5);
                 enemy.Damage(skillDamage);
-                Console.WriteLine("바이탈 스트라이크를 사용해서 {enemy.Name}에게 {alphaDamage}만큼의 데미지를 입혔습니다.");
+                Console.WriteLine("바이탈 스트라이크를 사용해서 {enemy.Name}에게 {skillDamage}만큼의 데미지를 입혔습니다.");
             }
         }
     }
