@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace W2Project
 {
@@ -44,68 +45,68 @@ namespace W2Project
             Console.SetCursorPosition(5, 23); Console.Write(">>     ");
             Console.SetCursorPosition(8, 23);
 
+            string dungeonChoiceString = Console.ReadLine();
 
 
             int dungeonChoice;
-            while (true)
-            {
-                string dungeonChoiceString = Console.ReadLine();
-                Console.SetCursorPosition(5, 23); Console.Write(">>     ");
-                Console.SetCursorPosition(8, 23);
+            if (int.TryParse(dungeonChoiceString, out dungeonChoice))
 
                 int.TryParse(dungeonChoiceString, out dungeonChoice);
 
-                if (dungeonChoice >= 0 && dungeonChoice <= 3)
-                {
-                    switch (dungeonChoice)
-                    {
-                        case 1:
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.SetCursorPosition(7, 7); Console.WriteLine("1. 초급 던전을 선택했습니다.");
-                            Thread.Sleep(1000);
-                            Console.ResetColor();
-                            Type0 = true;
-                            break;
-                        case 2:
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.SetCursorPosition(7, 9); Console.WriteLine("2. 중급 던전을 선택했습니다.");
-                            Thread.Sleep(1000);
-                            Console.ResetColor();
-                            Type1 = true;
-                            break;
-                        case 3:
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.SetCursorPosition(7, 11); Console.WriteLine("3. 상급 던전을 선택했습니다.");
-                            Thread.Sleep(1000);
-                            Console.ResetColor();
-                            Type2 = true;
-                            break;
-                        case 0:
-                            return; // 종료
-                    }
-                    break; // 올바른 입력을 받았으므로 무한 루프 종료
-                }
-
-                else
-                {
-                    Console.SetCursorPosition(5, 22);
-                    Console.WriteLine("잘못된 입력입니다. 0 ~ 3 사이의 숫자를 입력하세요.");
-                    Console.SetCursorPosition(5, 23); Console.Write(">>     ");
-                    Console.SetCursorPosition(8, 23);
-                    continue; // 잘못된 입력일 경우 다음 반복으로 이동
-                }
-            }
-            Console.SetCursorPosition(8, 23);
-
-            // 선택된 던전에 따라 전투 시작
-            if (dungeonChoice >= 1 && dungeonChoice <= 3)
+            if (dungeonChoice >= 0 && dungeonChoice <= 3)
             {
-                DungeonManager dungeonManager = DungeonManager.Instance;
-                Battle battle = new Battle();
-                battle.BattlePhase();
-            }
-        }
+                switch (dungeonChoice)
+                {
+                    case 1:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.SetCursorPosition(7, 7); Console.WriteLine("1. 초급 던전을 선택했습니다.");
+                        Thread.Sleep(1000);
+                        Type0 = true;
+                        Console.ResetColor();
+                        break;
+                    case 2:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.SetCursorPosition(7, 9); Console.WriteLine("2. 중급 던전을 선택했습니다.");
+                        Thread.Sleep(1000);
+                        Type1 = true;
+                        Console.ResetColor();
+                        break;
+                    case 3:
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.SetCursorPosition(7, 11); Console.WriteLine("3. 상급 던전을 선택했습니다.");
+                        Thread.Sleep(1000);
+                        Type2 = true;
+                        Console.ResetColor();
+                        break;
+                    case 0:
+                        return; // 종료
+                    default:
+                        Console.WriteLine("잘못된 입력입니다. 0부터 3 사이의 숫자를 입력하세요.");
+                        break;
+                }
+                Console.SetCursorPosition(8, 23);
 
+                // 선택된 던전에 따라 전투 시작
+                if (dungeonChoice >= 1 && dungeonChoice <= 3)
+                {
+                    DungeonManager dungeonManager = DungeonManager.Instance;
+                    Battle battle = new Battle();
+                    battle.BattlePhase();
+                }
+            }
+
+
+           
+
+         
+        }
+        public void BaseScene() // 기본 UI Mark.1
+        {
+            Console.Clear();
+            Console.WriteLine("--------------------------------------------------------------------------------------------");
+            Console.SetCursorPosition(0, 29);
+            Console.WriteLine("--------------------------------------------------------------------------------------------");
+        }
 
         public void DungeonResult() // 던전 보상 메소드
         {
@@ -182,14 +183,6 @@ namespace W2Project
             {
                 Console.WriteLine("버그 발생");
             }
-        }
-
-        public void BaseScene() // 기본 UI Mark.1
-        {
-            Console.Clear();
-            Console.WriteLine("--------------------------------------------------------------------------------------------");
-            Console.SetCursorPosition(0, 29);
-            Console.WriteLine("--------------------------------------------------------------------------------------------");
         }
     }
 }

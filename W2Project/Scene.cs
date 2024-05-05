@@ -429,9 +429,20 @@ namespace W2Project
                     Console.ResetColor();
                     DungeonManager dungeonManager = DungeonManager.Instance;
                     dungeonManager.DungeonPhase();
-
-                    BaseScene();
-                    Console.SetCursorPosition(5, 4); Console.WriteLine("던전에서 빠져나왔습니다.");
+                    //Console.SetCursorPosition(5, 4); Console.WriteLine("몬스터를 처치하여 경험치와 재화를 얻을 수 있습니다.");
+                    //Console.SetCursorPosition(5, 5); Console.WriteLine("전투 시스템 미구현");
+                    //Console.SetCursorPosition(7, 7);
+                    //Console.WriteLine("+ {0} 경험치", 5*Player.instance.GetStatusInt(Player.Status.LVL));
+                    //Player.instance.AddExp(5*Player.instance.GetStatusInt(Player.Status.LVL));
+                    //Console.SetCursorPosition(7, 8);
+                    //Console.WriteLine("+ {0} G",2*Player.instance.GetStatusInt(Player.Status.LVL));
+                    //Player.instance.AddGold(2*Player.instance.GetStatusInt(Player.Status.LVL));
+                    //Console.SetCursorPosition(7, 9);
+                    //int damage = 10 *Player.instance.GetStatusInt(Player.Status.LVL)
+                    //    - Player.instance.GetStatusInt(Player.Status.DEF) - Player.instance.GetStatusInt(Player.Status.BDEF) <= 0 ? 0 :
+                    //    10 *Player.instance.GetStatusInt(Player.Status.LVL)- Player.instance.GetStatusInt(Player.Status.DEF) - Player.instance.GetStatusInt(Player.Status.BDEF);
+                    //Console.WriteLine("- {0} HP", damage);
+                    //Player.instance.Damage(damage);
                     Console.SetCursorPosition(5, 19); Console.WriteLine("0. 나가기");
                     Console.SetCursorPosition(5, 23); Console.Write(">>  ");
                     Console.SetCursorPosition(8, 23);
