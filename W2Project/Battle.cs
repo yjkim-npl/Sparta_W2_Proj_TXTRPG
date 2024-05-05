@@ -189,7 +189,7 @@ namespace W2Project
                         Console.ResetColor();
 
                         int playerHealthBeforeAttack = Player.instance.GetStatusInt(Player.Status.HP); //플레이어 공격 받기 전 체력
-                        int PlayerDeffence = Player.instance.GetStatusInt(Player.Status.DEF);
+                        int PlayerDeffence = Player.instance.GetStatusInt(Player.Status.DEF) + Player.instance.GetStatusInt(Status.BDEF);
                         int damage = enemy.Attack - PlayerDeffence;
                         damage = Math.Max(0, damage);
                         Player.instance.Damage(damage);
@@ -453,7 +453,7 @@ namespace W2Project
 
         public int AttackDamage() // 치명타 및 회피 메소드
         {
-            int baseDamage = Player.instance.GetStatusInt(Status.ATK);
+            int baseDamage = Player.instance.GetStatusInt(Status.ATK) + Player.instance.GetStatusInt(Status.BATK);
             bool isCritical = IsCriticalHit();
             bool isAvoid = IsAvoid();
 
