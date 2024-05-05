@@ -173,7 +173,7 @@ namespace W2Project
                 List<string> lis_quests_Curr = stats[17] == "" ? new List<string>() : stats[17].Split(' ').ToList();
                 List<string> lis_quests_Goal = stats[18] == "" ? new List<string>() : stats[18].Split(' ').ToList();
                 List<(int, int, int, int)> lis_quest_info = new List<(int, int, int, int)>();
-                for( int a=0; a<lis_quests_status.Count; a++)
+                for( int a=0; a<lis_quests_status.Count-1; a++) // last element is '\n'
                 {
                     int status = int.Parse(lis_quests_status[a]);
                     int ID = int.Parse(lis_quests_ID[a]);
