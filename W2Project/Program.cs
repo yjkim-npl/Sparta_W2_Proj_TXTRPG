@@ -7,6 +7,7 @@ namespace W2Project
     {
         public static List<Item> item_list;
         public static List<Enemy> enemy_list;
+        bool loadData = false;
 
         public static string CenterAlign(string text, int width)
         {
@@ -92,7 +93,7 @@ namespace W2Project
                 }
                 while (comp != null);
                 List<string>items = stats[13].Split(' ').ToList();
-                List<string>equip = stats[14].Split(' ').ToList();
+                List<string>equip = stats[15].Split(' ').ToList();
                 List<Item> items_list = new List<Item>();
                 List<bool> equip_list = new List<bool>();
                 for (int a = 0; a < items.Count; a++)
@@ -139,9 +140,6 @@ namespace W2Project
             {
                 player = new Player(username);
             }
-
-            scene.MoveScene(SceneType.Jobs);
-            string jobChoiceString = Console.ReadLine();
 
             //switch(int.Parse(jobChoiceString))
             //{
@@ -197,6 +195,9 @@ namespace W2Project
             //            break;
             //    }
             //}
+            scene.MoveScene(SceneType.Jobs);
+            string jobChoiceString = Console.ReadLine();
+
             if (int.Parse(jobChoiceString) == 1)
             {
                 Player.instance.Warrior();
@@ -208,6 +209,12 @@ namespace W2Project
             else if (int.Parse(jobChoiceString) == 3)
             {
                 Player.instance.Chief();
+            }
+
+            if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior" || Player.instance.GetStatusStr(Player.Status.JOB) == "Archer" ||
+                    Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
+            {
+                scene.MoveScene(SceneType.Main);
             }
 
             // MainScene
