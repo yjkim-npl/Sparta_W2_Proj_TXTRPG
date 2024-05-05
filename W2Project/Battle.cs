@@ -500,7 +500,16 @@ namespace W2Project
                 Enemy enemy = enemiesList[j];
 
                 Console.SetCursorPosition(5, 7 + j);
-                Console.WriteLine("{0,-60}", $"몬스터 {j + 1}: {(enemy.Health > 0 ? enemy.Name : "DEAD")}, 체력: {enemy.Health}");
+                if (enemy.Health > 0)
+                {
+                    Console.WriteLine("{0,-60}", $"몬스터 {j + 1}: {enemy.Name}, 체력: {enemy.Health}");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine("{0,-60}", $"몬스터 {j + 1}: DEAD, 체력: {enemy.Health}");
+                    Console.ResetColor(); // 색상을 변경한 후에는 기본 색상으로 리셋해야 합니다.
+                }
             }
         }
     }
