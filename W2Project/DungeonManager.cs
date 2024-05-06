@@ -38,8 +38,8 @@ namespace W2Project
 
             Console.SetCursorPosition(5, 5); Console.WriteLine("던전을 선택해주세요.");
             Console.SetCursorPosition(7, 7); Console.WriteLine("1. 초급 던전");
-            Console.SetCursorPosition(7, 9); Console.WriteLine("2. 중급 던전");
-            Console.SetCursorPosition(7, 11); Console.WriteLine("3. 상급 던전");
+            Console.SetCursorPosition(7, 9); Console.WriteLine("2. 중급 던전 (권장 레벨 5)");
+            Console.SetCursorPosition(7, 11); Console.WriteLine("3. 상급 던전 (권장 레벨 10)");
 
             Console.SetCursorPosition(5, 19); Console.WriteLine("0. 나가기");
             Console.SetCursorPosition(5, 23); Console.Write(">>     ");

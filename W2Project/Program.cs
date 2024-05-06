@@ -214,24 +214,22 @@ namespace W2Project
             {
                 player = new Player(username);
                 scene.MoveScene(SceneType.Jobs);
-                string jobChoiceString = Console.ReadLine();
-                string job;
-                switch(jobChoiceString)
+                int jobChoice = Program.Choice(1, 3);
+
+                switch(jobChoice)
                 {
-                    case "1":
-                        job = "Warrior";
+                    case 1:
+                        Player.instance.Warrior();
                         break;
-                    case "2":
-                        job = "Archer";
+                    case 2:
+                        Player.instance.Archer();
                         break;
-                    case "3":
-                        job = "Chief";
+                    case 3:
+                        Player.instance.Chief();
                         break;
                     default:
-                        job = "ETC";
                         break;
                 }
-                player.AssignJob(job);
             }
 
 

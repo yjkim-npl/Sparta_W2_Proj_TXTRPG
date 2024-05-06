@@ -462,7 +462,7 @@ namespace W2Project
                 if (IsCriticalHit())
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.SetCursorPosition(40, 12); Console.WriteLine("치명타!");
+                    Console.SetCursorPosition(25, 11); Console.WriteLine("치명타!");
                     baseDamage = (int)Math.Round(baseDamage * 1.6); // 치명타가 발생하면 공격력을 1.6 배로 증가
                     Console.ResetColor();
                 }
@@ -470,7 +470,7 @@ namespace W2Project
                 if (isAvoid)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.SetCursorPosition(40, 12); Console.WriteLine("회피!       ");
+                    Console.SetCursorPosition(25, 11); Console.WriteLine("회피!       ");
                     Console.ResetColor();
                     return 0; // 회피 성공 시 피해 없음
                 }
