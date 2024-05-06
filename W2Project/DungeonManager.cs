@@ -81,6 +81,7 @@ namespace W2Project
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.SetCursorPosition(7, 7);
                     Console.WriteLine("1. 초급 던전을 선택했습니다.");
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("{0,-50}", " ");
                     Thread.Sleep(1000);
                     Type0 = true;
                     Console.ResetColor();
@@ -89,6 +90,7 @@ namespace W2Project
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.SetCursorPosition(7, 9);
                     Console.WriteLine("2. 중급 던전을 선택했습니다.");
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("{0,-50}", " ");
                     Thread.Sleep(1000);
                     Type1 = true;
                     Console.ResetColor();
@@ -97,6 +99,7 @@ namespace W2Project
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.SetCursorPosition(7, 11);
                     Console.WriteLine("3. 상급 던전을 선택했습니다.");
+                    Console.SetCursorPosition(5, 22); Console.WriteLine("{0,-50}", " ");
                     Thread.Sleep(1000);
                     Type2 = true;
                     Console.ResetColor();
