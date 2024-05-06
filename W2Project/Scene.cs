@@ -413,7 +413,7 @@ namespace W2Project
                                 Console.WriteLine("{0,5} G", Player.instance.GetStatusInt(Player.Status.GOLD));
                             }
                             Console.SetCursorPosition(8, 23);
-                            itemNo = Program.Choice(0, Shop.instance.GetNItem());
+                            itemNo = Program.Choice(0, curPageShop == maxPageShop ? Shop.instance.GetNItem() % nItemsOnPage : nItemsOnPage);
                         }
                         for(int a=0; a<(curPageShop==maxPageShop?Shop.instance.GetNItem()%nItemsOnPage:nItemsOnPage); a++)
                         {
