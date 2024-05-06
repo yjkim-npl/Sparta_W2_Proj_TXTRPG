@@ -102,19 +102,23 @@ namespace W2Project
                         int playerDamage = AttackDamage();
                         int enemyHealthBeforeAttack = enemy.Health; // 몬스터 공격 받기 전 체력
 
-                        if (FirstSkillActive == true) // 첫번 째 스킬 대미지 입력
+                        if (FirstSkillActive == true)
                         {
-                            if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
+                            // 각 직업에 따라 스킬을 실행합니다.
+                            switch (Player.instance.GetStatusStr(Player.Status.JOB))
                             {
-                                warriorSkills.AlphaStrike(enemy);
-                            }
-                            else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
-                            {
-                                archerSkills.DualShot(enemy);
-                            }
-                            else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
-                            {
-                                chiefSkills.VitalStrike(enemy);
+                                case "Warrior":
+                                    warriorSkills.AlphaStrike(enemy);
+                                    break;
+                                case "Archer":
+                                    archerSkills.DualShot(enemy);
+                                    break;
+                                case "Chief":
+                                    chiefSkills.VitalStrike(enemy);
+                                    break;
+                                default:
+                                    Console.WriteLine("버그 발견.");
+                                    break;
                             }
                             FirstSkillActive = false;
                         }
@@ -122,7 +126,7 @@ namespace W2Project
                         {
                             if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
                             {
-                                warriorSkills.AlphaStrike(enemy);
+                                warriorSkills.ShieldBash(enemy);
                             }
                             else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
                             {
@@ -130,7 +134,7 @@ namespace W2Project
                             }
                             else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
                             {
-                                chiefSkills.VitalStrike(enemy);
+                                chiefSkills.Backstab(enemy);
                             }
                             secondSkillActive = false;
                         }
@@ -138,7 +142,7 @@ namespace W2Project
                         {
                             if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
                             {
-                                warriorSkills.AlphaStrike(enemy);
+                                warriorSkills.Cleave(enemy);
                             }
                             else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
                             {
@@ -146,7 +150,7 @@ namespace W2Project
                             }
                             else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
                             {
-                                chiefSkills.VitalStrike(enemy);
+                                chiefSkills.ShadowStrike(enemy);
                             }
                             thirdSkillActive = false;
                         }
@@ -231,20 +235,20 @@ namespace W2Project
                     if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
                     {
                         Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. AlphaStrike");
-                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
-                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. ShieldBash");
+                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. Cleave");
                     }
                     else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Archer")
                     {
                         Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. DualShot");
-                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
-                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. MultiShot");
+                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. PiercingShot");
                     }
                     else if (Player.instance.GetStatusStr(Player.Status.JOB) == "Chief")
                     {
                         Console.SetCursorPosition(5, 19); Console.WriteLine("{0,-25}", "1. VitalStrike");
-                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. none");
-                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. none");
+                        Console.SetCursorPosition(5, 20); Console.WriteLine("{0,-25}", "2. Backstab");
+                        Console.SetCursorPosition(5, 21); Console.WriteLine("{0,-25}", "3. ShadowStrike");
                     }
                     else
                     {
@@ -265,10 +269,10 @@ namespace W2Project
                     Console.SetCursorPosition(8, 23);
                     string skillSecetiedNum = Console.ReadLine();
 
-
-                    if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
+                    
+                    if (int.TryParse(skillSecetiedNum, out int selectedWariiorSkillNum))
                     {
-                        if (int.TryParse(skillSecetiedNum, out int selectedWariiorSkillNum))
+                        if (Player.instance.GetStatusStr(Player.Status.JOB) == "Warrior")
                         {
                             if (selectedWariiorSkillNum == 1)
                             {
