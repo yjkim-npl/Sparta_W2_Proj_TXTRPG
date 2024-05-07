@@ -13,26 +13,42 @@
  - 캐릭터의 이름을 설정할 수 있습니다.
 
  ## 메인 화면
- ![MainScene](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/3b2261c3-e30a-445f-a222-e3436815116e)
+![MainScene](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/ca069ab5-52a1-4e35-8271-459ebc27df83)
 
  - 시작화면에서 캐릭터의 이름을 설정한 뒤 보게되는 화면으로, 선택지를 통해서 행동을 결정할 수 있습니다.
 
  ## 캐릭터 상태창
-![Status_default](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/9ebfbb8d-acf2-43c1-ad75-b5e5f8328fda)
+![Status](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/2ce7b58b-5f5a-4606-9b0a-6259bfe2840c)
+
  - 현재 캐릭터의 상세정보를 확인 할 수 있습니다.
  - 레벨에 따른 스탯은 기본값에 들어가며 착용한 장비에 따라 추가되는 스탯은 `+` 이후 값에 적용됩니다.
 
  ## 인벤토리
-![Inventory_Equip](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/d44f23c0-f3c1-444e-91f7-635f014f087b)
+![Inventory](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/87eb83ee-b1d2-4022-bb66-ee7ee1199872)
  - 캐릭터가 소유한(구매 혹은 드랍으로 획득한) 장비를 확인할 수 있습니다.
  - 행동 명령에 따라서 인벤토리를 확인하는 모드와 장비를 착용/해제하는 모드로 전환할 수 있습니다.
 
  ## 상점
- ![Shop_buy](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/118cee14-505e-40f1-b360-e36da9f921d2)
+![Shop](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/d77dc3b9-cb1e-4a0a-a0b3-ada35a9a63f1)
+
  - 캐릭터가 소지한 골드를 소모하여 장비를 구매할 수 있습니다.
  - 소지금이 불충분하거나 상점의 재고가 소진하게된다면 구매를 못하니 주의하시기 바랍니다.
 
  ## 던전
- ![Dungeon](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/7113d937-f724-40d9-bb8e-a9e6f55e0aed)
- - 전투 시스템은 현재까지 미구현된 기능이며, 던전에 입장할 시 레벨을 기준으로 던전 난이도가 상승, 방어력을 기준으로 받는 데미지가 바뀌며 보상이 더 좋아집니다.
+![Battle](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/2e024629-25e3-431f-afc3-b3bccbdeaf26)
 
+ - 플레이어의 스테이터스와 스킬에 따라 데미지가 바뀝니다. 
+ - 전투에서 승리시 경험치와 골드를 얻을 수 있습니다.
+ - 전투에서 사망시 사망 패널티를 받게 됩니다.
+
+## 휴식 및 강화
+![Rest](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/a3d92521-1905-42ee-8b72-8b8e97a759e7)
+
+- 보유한 포션을 사용하여 플레이어의 공격력, 방어력, 체력을 향상시킬 수 있습니다.
+- 포션은 상점 및 퀘스트로 획득이 가능합니다.
+
+## 퀘스트 보드
+![Quest](https://github.com/yjkim-npl/Sparta_W2_Proj_TXTRPG/assets/69491656/fd7df4f3-7fb8-4ac5-882c-883aa85f1fb2)
+
+- 현재 플레이어의 정보에 따라서 받을 수 있는 퀘스트가 다릅니다.
+- 조건을 달성시 완료가 가능하고, 완료시 보상을 얻을 수 있습니다.

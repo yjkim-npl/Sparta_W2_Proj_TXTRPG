@@ -16,7 +16,6 @@ namespace W2Project
         }
         public static int Choice(int min, int max, int cutmin = -1, int cutmax = -1)
         {
-            // 1 3 (-1 -1 ) 4
             string in_str = Console.ReadLine();
             int choice;
             while(!int.TryParse(in_str, out choice) || !(choice >= min && choice <=max) || ((cutmin==-1&&cutmax==-1)?false:(choice >= cutmin && choice <= cutmax)))
