@@ -91,8 +91,6 @@ namespace W2Project
         }
     }
 
-
-
     public class EnemyManager
     {
         private List<Enemy> type0Enemies;
